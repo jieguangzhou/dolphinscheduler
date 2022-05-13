@@ -338,6 +338,9 @@ export function formatParams(data: INodeData): {
     taskParams.experimentName = data.experimentName
     taskParams.modelName = data.modelName
     taskParams.mlflowTrackingUri = data.mlflowTrackingUri
+    taskParams.mlflowJobType = data.mlflowJobType
+    taskParams.automlTool  = data.automlTool
+    taskParams.registerModel = data.registerModel
   }
 
   if (data.taskType === 'PIGEON') {

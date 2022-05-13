@@ -319,6 +319,9 @@ interface ITaskParams {
   experimentName?:string
   modelName?:string
   mlflowTrackingUri?:string
+  mlflowJobType?:string
+  automlTool?:string
+  registerModel?:boolean
 }
 
 interface INodeData
