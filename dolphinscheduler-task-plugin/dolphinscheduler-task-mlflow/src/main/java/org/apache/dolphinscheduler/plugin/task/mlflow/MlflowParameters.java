@@ -60,7 +60,7 @@ public class MlflowParameters extends AbstractParameters {
 
     private String mlflowTaskType = "";
 
-    private String experimentName;
+    private String experimentName = "Default";
 
     private String modelName = "";
 
