@@ -20,7 +20,7 @@ The Mlflow plugin currently supports and will support the following:
 - [ ] MLflow Models
     - [x] MLFLOW: Use `MLflow models serve` to deploy a model service
     - [x] Docker: Run the container after packaging the docker image
-    - [ ] Docker Compose: Use docker compose to run the container, Will replace the docker run above
+    - [x] Docker Compose: Use docker compose to run the container, Will replace the docker run above
     - [ ] Seldon core: Use Selcon core to deploy model to k8s cluster
     - [ ] k8s: Deploy containers directly to K8S 
     - [ ] mlflow deployments: Built-in deployment modules, such as built-in deployment to SageMaker, etc
@@ -149,6 +149,16 @@ The actual interface is as follows
 - **mlflow server tracking uri** ：MLflow server uri, default http://localhost:5000.
 - **model-uri** ：Model-uri of mlflow , support `models:/<model_name>/suffix` format and `runs:/` format. See https://mlflow.org/docs/latest/tracking.html#artifact-stores
 - **Port** ：The port to listen on
+
+#### DOCKER COMPOSE
+
+![mlflow-models-docker-compose](/img/tasks/demo/mlflow-models-docker-compose.png)
+
+- **mlflow server tracking uri** ：MLflow server uri, default http://localhost:5000.
+- **model-uri** ：Model-uri of mlflow , support `models:/<model_name>/suffix` format and `runs:/` format. See https://mlflow.org/docs/latest/tracking.html#artifact-stores
+- **Port** ：The port to listen on
+- **max cpu limit** ：For example `1.0` or `0.5`, the same as docker compose.
+- **max memory limit** ：For example `1G` or `500M`, the same as docker compose.
 
 ## Environment to prepare
 

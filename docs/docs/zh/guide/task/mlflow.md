@@ -19,7 +19,7 @@ MLflow 组件用于执行 MLflow 任务，目前包含Mlflow Projects, 和MLflow
 - [ ] MLflow Models
   - [x] MLFLOW: 直接使用 `MLflow models serve` 部署模型
   - [x] Docker: 打包 DOCKER 镜像后部署模型
-  - [ ] Docker Compose: 使用Docker Compose 部署模型，将会取代上面的Docker部署
+  - [x] Docker Compose: 使用Docker Compose 部署模型，将会取代上面的Docker部署
   - [ ] Seldon core: 构建完镜像后，使用Seldon Core 部署到k8s集群上, 可以使用Seldon Core的生成模型管理能力
   - [ ] k8s: 构建完镜像后， 部署到k8s集群上
   - [ ] mlflow deployments: 内置的允许MLflow 部署模块, 如内置的部署到Sagemaker等
@@ -115,7 +115,7 @@ MLflow 组件用于执行 MLflow 任务，目前包含Mlflow Projects, 和MLflow
 
 - **mlflow server tracking uri** ：MLflow server 的连接, 默认 http://localhost:5000。
 - **部署模型的uri** ：mlflow 服务里面模型对应的uri, 支持 `models:/<model_name>/suffix` 格式 和 `runs:/` 格式。
-- **部署端口** ：部署服务时的端口。
+- **监听端口** ：部署服务时的端口。
 
 #### Docker
 
@@ -123,7 +123,17 @@ MLflow 组件用于执行 MLflow 任务，目前包含Mlflow Projects, 和MLflow
 
 - **mlflow server tracking uri** ：MLflow server 的连接, 默认 http://localhost:5000。
 - **部署模型的uri** ：mlflow 服务里面模型对应的uri, 支持 `models:/<model_name>/suffix` 格式 和 `runs:/` 格式。
-- **部署端口** ：部署服务时的端口。
+- **监听端口** ：部署服务时的端口。
+
+#### DOCKER COMPOSE
+
+![mlflow-models-docker-compose](/img/tasks/demo/mlflow-models-docker-compose.png)
+
+- **mlflow server tracking uri** ：MLflow server 的连接, 默认 http://localhost:5000。
+- **部署模型的uri** ：mlflow 服务里面模型对应的uri, 支持 `models:/<model_name>/suffix` 格式 和 `runs:/` 格式。
+- **监听端口** ：部署服务时的端口。
+- **最大CPU限制** ：如 `1.0` 或者 `0.5`, 与 docker compose 一致。
+- **最大内存限制** ：如 `1G` 或者 `500M`, 与 docker compose 一致。
 
 ## 环境准备
 
