@@ -36,14 +36,9 @@ public class MlflowConstants {
 
     public static final String PRESET_BASIC_ALGORITHM_PROJECT = PRESET_REPOSITORY + "#Project-BasicAlgorithm";
 
-    public static final String RUN_PROJECT_BASIC_ALGORITHM_SCRIPT = "run_mlflow_basic_algorithm_project.sh";
-
-    public static final String RUN_PROJECT_AUTOML_SCRIPT = "run_mlflow_automl_project.sh";
-
     public static final String MLFLOW_TASK_TYPE_PROJECTS = "MLflow Projects";
 
     public static final String MLFLOW_TASK_TYPE_MODELS = "MLflow Models";
-
 
     public static final String MLFLOW_MODELS_DEPLOY_TYPE_MLFLOW = "MLFLOW";
 
