@@ -997,6 +997,8 @@ const project = {
     mlflowProjectRepository_tips: 'github respository or path on worker',
     mlflowProjectVersion: 'Project Version',
     mlflowProjectVersion_tips: 'git version',
+    mlflow_cpuLimit: 'max cpu limit',
+    mlflow_memoryLimit: 'max memory limit',
     send_email: 'Send Email',
     log_display: 'Log display',
     rows_of_result: 'rows of result',

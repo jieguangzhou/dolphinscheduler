@@ -335,6 +335,8 @@ interface ITaskParams {
   deployType?: string
   deployPort?: string
   deployModelKey?: string
+  cpuLimit?: string
+  memoryLimit?: string
 }
 
 interface INodeData

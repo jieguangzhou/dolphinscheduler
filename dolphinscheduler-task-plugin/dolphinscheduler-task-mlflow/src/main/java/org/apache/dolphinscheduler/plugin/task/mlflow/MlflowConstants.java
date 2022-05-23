@@ -44,6 +44,13 @@ public class MlflowConstants {
 
     public static final String MLFLOW_MODELS_DEPLOY_TYPE_DOCKER = "DOCKER";
 
+    public static final String MLFLOW_MODELS_DEPLOY_TYPE_DOCKER_COMPOSE = "DOCKER COMPOSE";
+
+    /**
+     * template file
+     */
+    public static final String TEMPLATE_DOCKER_COMPOSE = "docker-compose.yml";
+
 
     /**
      * mlflow command
@@ -81,9 +88,17 @@ public class MlflowConstants {
 
     public static final String MLFLOW_BUILD_DOCKER = "mlflow models build-docker -m %s -n %s --enable-mlserver";
 
-
     public static final String DOCKER_RREMOVE_CONTAINER = "docker rm -f %s";
 
     public static final String DOCKER_RUN = "docker run --name=%s -p=%s:8080 %s";
+
+    public static final String DOCKER_COMPOSE_RUN = "docker compose up -d";
+
+    public static final String DOCKER_COMPOSE_CANCEL = "docker compose down";
+
+    public static final String SET_DOCKER_COMPOSE_ENV = "export imageName=%s\n" +
+            "export deployPort=%s\n" +
+            "export cpuLimit=%s\n" +
+            "export memoryLimit=%s";
 
 }
