@@ -45,7 +45,7 @@ public class DvcConstants {
 
     public static final String DVC_AUTOSTAGE  = "dvc config core.autostage true --local || exit 1";
 
-    public static final String DVC_ADD_DATA  = "dvc add $DVC_DATA_PATH -v -o $DVC_DATA_LOCATION --to-remote";
+    public static final String DVC_ADD_DATA  = "dvc add $DVC_DATA_PATH -v -o $DVC_DATA_LOCATION --to-remote || exit 1";
 
     public static final String GIT_UPDATE_FOR_UPDATE_DATA  = "git commit -am \"$DVC_MESSAGE\"\n" +
             "git tag \"$DVC_VERSION\" -m \"$DVC_MESSAGE\"\n" +
@@ -55,7 +55,7 @@ public class DvcConstants {
     public static final String DVC_DOWNLOAD  = "dvc get $DVC_REPO $DVC_DATA_LOCATION -o $DVC_DATA_PATH -v --rev $DVC_VERSION";
 
 
-    public static final String DVC_INIT = "dvc init";
+    public static final String DVC_INIT = "dvc init || exit 1";
 
     public static final String DVC_ADD_REMOTE = "dvc remote add origin %s -d";
 
