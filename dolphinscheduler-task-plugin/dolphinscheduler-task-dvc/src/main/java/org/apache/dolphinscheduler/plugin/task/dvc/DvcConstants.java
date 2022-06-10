@@ -31,8 +31,7 @@ public class DvcConstants {
     public static final String DVC_STORE_NAME = "Default";
 
 
-
-    public static final String SET_DVC_REPO = "DVC_REPO=%s";
+    public static final String CHECK_AND_SET_DVC_REPO = "which dvc || { echo \"dvc does not exist\"; exit 1; }; DVC_REPO=%s";
 
     public static final String SET_DATA_PATH = "DVC_DATA_PATH=%s";
 

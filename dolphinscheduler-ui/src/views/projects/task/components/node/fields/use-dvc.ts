@@ -41,6 +41,8 @@ export function useDvc(model: { [field: string]: any }): IJsonItem[] {
   const dvcVersionSpan = ref(0)
   const dvcMessageSpan = ref(0)
   const dvcStoreUrlSpan = ref(0)
+  const initRequired = ref(true)
+  const downloadUploadRequired = ref(true)
 
   const setFlag = () => {
     model.isUpload = model.dvcTaskType === 'Upload' ? true : false
@@ -48,88 +50,103 @@ export function useDvc(model: { [field: string]: any }): IJsonItem[] {
     model.isInit = model.dvcTaskType === 'Init DVC' ? true : false
   }
 
-  const resetSpan = () => {
+  const resetData = () => {
     dvcLoadSaveDataPathSpan.value = model.isUpload || model.isDownload ? 24 : 0
     dvcDataLocationSpan.value = model.isUpload || model.isDownload ? 24 : 0
     dvcVersionSpan.value = model.isUpload || model.isDownload ? 24 : 0
     dvcMessageSpan.value = model.isUpload ? 24 : 0
     dvcStoreUrlSpan.value = model.isInit ? 24 : 0
+    downloadUploadRequired.value = model.isDownload || model.isUpload ? true : false
+    initRequired.value = model.isInit ? true : false
   }
 
   watch(
     () => [model.dvcTaskType],
     () => {
       setFlag()
-      resetSpan()
+      resetData()
     }
   )
   setFlag()
-  resetSpan()
+  resetData()
 
   return [
     {
-      type: 'input',
-      field: 'dvcRepository',
-      name: 'dvcRepository',
-      span: 12,
-      props: {
-        placeholder: t('project.node.mlflow_mlflowTrackingUri_tips')
-      },
-      validate: {
-        trigger: ['input', 'blur'],
-        required: false,
-        validator(validate: any, value: string) {
-          if (!value) {
-            return new Error(
-              t('project.node.mlflow_mlflowTrackingUri_error_tips')
-            )
-          }
-        }
-      }
-    },
-    {
       type: 'select',
       field: 'dvcTaskType',
-      name: 'dvcTaskType',
+      name: t('project.node.dvc_task_type'),
       span: 12,
       options: MLFLOW_TASK_TYPE
     },
     {
       type: 'input',
+      field: 'dvcRepository',
+      name: t('project.node.dvc_repository'),
+      span: 24,
+      props: {
+        placeholder: t('project.node.dvc_repository_tips')
+      },
+      validate: {
+        trigger: ['input', 'blur'],
+        required: true,
+        message: t('project.node.dvc_empty_tips')
+      }
+    },
+    {
+      type: 'input',
       field: 'dvcDataLocation',
-      name: 'dvcDataLocation',
+      name: t('project.node.dvc_data_location'),
       props: {
         placeholder: 'dvcDataLocation'
       },
       span: dvcDataLocationSpan,
       validate: {
         trigger: ['input', 'blur'],
-        required: false
+        required: downloadUploadRequired,
+        message: t('project.node.dvc_empty_tips')
       }
     },
     {
       type: 'input',
       field: 'dvcLoadSaveDataPath',
-      name: 'dvcLoadSaveDataPath',
-      span: dvcLoadSaveDataPathSpan
+      name: t('project.node.dvc_load_save_data_path'),
+      span: dvcLoadSaveDataPathSpan,
+      validate: {
+        trigger: ['input', 'blur'],
+        required: downloadUploadRequired,
+        message: t('project.node.dvc_empty_tips')
+      }
     },
     {
       type: 'input',
       field: 'dvcVersion',
-      name: 'dvcVersion',
-      span: dvcVersionSpan
+      name: t('project.node.dvc_version'),
+      span: dvcVersionSpan,
+      props: {
+        placeholder: t('project.node.dvc_version_tips')
+      },
+      validate: {
+        trigger: ['input', 'blur'],
+        required: downloadUploadRequired,
+        message: t('project.node.dvc_empty_tips')
+      }
     },
     {
       type: 'input',
       field: 'dvcMessage',
-      name: 'dvcMessage',
+      name: t('project.node.dvc_message'),
       span: dvcMessageSpan
     },
     {
       type: 'input',
       field: 'dvcStoreUrl',
-      name: 'dvcStoreUrl',
-      span: dvcStoreUrlSpan
+      name: t('project.node.dvc_store_url'),
+      span: dvcStoreUrlSpan,
+      validate: {
+        trigger: ['input', 'blur'],
+        required: initRequired,
+        message: t('project.node.dvc_empty_tips')
+      }
     }
   ]
 }

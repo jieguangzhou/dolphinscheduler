@@ -45,10 +45,6 @@ export function useDvc({
     timeout: 30,
     timeoutNotifyStrategy: ['WARN'],
     dvcTaskType: 'Upload',
-    dvcRepository: 'git@github.com:jieguangzhou/dvc-data-repository-example',
-    dvcLoadSaveDataPath: '/home/lucky/WhaleOps/MLflow-AutoML/data/test_iris.json',
-    dvcDataLocation: 'test_iris.json',
-    dvcMessage: 'DataLocation',
   } as INodeData)
 
   let extra: IJsonItem[] = []

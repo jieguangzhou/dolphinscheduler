@@ -118,7 +118,7 @@ public class DvcTask extends AbstractTaskExecutor {
 
     private String buildUploadCommond() {
         List<String> args = new ArrayList<>();
-        args.add(String.format(DvcConstants.SET_DVC_REPO, parameters.getDvcRepository()));
+        args.add(String.format(DvcConstants.CHECK_AND_SET_DVC_REPO, parameters.getDvcRepository()));
         args.add(String.format(DvcConstants.SET_DATA_PATH, parameters.getDvcLoadSaveDataPath()));
         args.add(String.format(DvcConstants.SET_DATA_LOCATION, parameters.getDvcDataLocation()));
         args.add(String.format(DvcConstants.SET_VERSION, parameters.getDvcVersion()));
@@ -135,7 +135,7 @@ public class DvcTask extends AbstractTaskExecutor {
 
     private String buildDownCommond() {
         List<String> args = new ArrayList<>();
-        args.add(String.format(DvcConstants.SET_DVC_REPO, parameters.getDvcRepository()));
+        args.add(String.format(DvcConstants.CHECK_AND_SET_DVC_REPO, parameters.getDvcRepository()));
         args.add(String.format(DvcConstants.SET_DATA_PATH, parameters.getDvcLoadSaveDataPath()));
         args.add(String.format(DvcConstants.SET_DATA_LOCATION, parameters.getDvcDataLocation()));
         args.add(String.format(DvcConstants.SET_VERSION, parameters.getDvcVersion()));
@@ -148,7 +148,7 @@ public class DvcTask extends AbstractTaskExecutor {
 
     private String buildInitDvcCommond() {
         List<String> args = new ArrayList<>();
-        args.add(String.format(DvcConstants.SET_DVC_REPO, parameters.getDvcRepository()));
+        args.add(String.format(DvcConstants.CHECK_AND_SET_DVC_REPO, parameters.getDvcRepository()));
         args.add(DvcConstants.GIT_CLONE_DVC_REPO);
         args.add(DvcConstants.DVC_INIT);
         args.add(String.format(DvcConstants.DVC_ADD_REMOTE, parameters.getDvcStoreUrl()));
