@@ -59,7 +59,7 @@ The data is not actually stored in a Git repository, but somewhere else, and DVC
 - **Remote Store Url** ：The actual data is stored at the address. You can learn about the supported storage types from the [DVC supported storage types](https://dvc.org/doc/command-reference/remote/add#supported-storage-types) .
 
 The example above shows that: 
-Initialize repository `git@github.com:xxxx/dvc-data-repository-example.git` as a DVC project and bind the remote storage address to `~/dvc`
+Initialize repository `git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example.git` as a DVC project and bind the remote storage address to `~/dvc`
 
 ### Upload
 
@@ -76,9 +76,9 @@ Used to upload and update data and record version numbers.
 
 The example above shows that:
 
-Upload data `/home/lucky/MLflow-AutoML/data/iris` to the root directory of repository `git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example.git`. The file or folder of data is named `iris`.
+Upload data `/home/data/iris` to the root directory of repository `git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example.git`. The file or folder of data is named `iris`.
 
-Then run `git tag "iris_v1.0" -m "init iris data"`. Record the version tag `iris_v1.0` and the version message `inir Iris data`.
+Then run `git tag "iris_1.0" -m "init iris data"`. Record the version tag `iris_1.0` and the version message `inir iris data`.
 
 ### Download
 
@@ -94,7 +94,7 @@ Used to download data for a specific version.
 
 The example above shows that:
 
-Download the data for iris data at version `iris_1.0` in repository `git@github.com:xxxx/dvc-data-repository-example.git` to the `~/dvc_test/iris`
+Download the data for iris data at version `iris_1.0` in repository `git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example.git` to the `~/dvc_test/iris`
 
 ## Environment to prepare
 

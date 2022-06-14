@@ -53,7 +53,7 @@ DVC 组件用于在DS上使用DVC的数据版本管理功能，帮助用户简�
   ：实际的数据保存的地址，支持的类型可见 [DVC supported storage types](https://dvc.org/doc/command-reference/remote/add#supported-storage-types)
   。
 
-如上述例子表示： 将仓库 `git@github.com:xxxx/dvc-data-repository-example.git` 初始化为DVC项目，并绑定远程储存地址为 `~/dvc`
+如上述例子表示： 将仓库 `git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example.git` 初始化为DVC项目，并绑定远程储存地址为 `~/dvc`
 
 ### Upload
 
@@ -68,8 +68,8 @@ DVC 组件用于在DS上使用DVC的数据版本管理功能，帮助用户简�
 - **数据版本** ：上传数据后，为该版本数据打上的版本号，会保存到 git tag 里面。
 - **数据版本信息** ：本次上传需要备注的信息。
 
-如上述例子表示： 将数据 `/home/lucky/xxxx/MLflow-AutoML/data/iris` 上传到仓库 `git@github.com:xxxx/dvc-data-repository-example.git`
-的根目录下，数据的文件/文件夹名字为`iris`。 然后执行 `git tag "iris_v1.0" -m "init iris data"`。 记录版本号 `iris_v1.0`和 版本信息 'inir iris data'
+如上述例子表示： 将数据 `/home/data/iris` 上传到仓库 `git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example.git`
+的根目录下，数据的文件/文件夹名字为`iris`。 然后执行 `git tag "iris_1.0" -m "init iris data"`。 记录版本号 `iris_1.0`和 版本信息 'inir iris data'
 
 ### Download
 
