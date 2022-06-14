@@ -85,8 +85,8 @@ public class DvcTaskTest {
     public void testDvcUpload() throws Exception{
         DvcTask dvcTask = initTask(createUploadParameters());
         Assert.assertEquals(dvcTask.buildCommand(),
-                "which dvc || { echo \"dvc does not exist\"; exit 1; }; DVC_REPO=git@github.com:xxxx/dvc-data-repository-example\n" +
-                "DVC_DATA_PATH=/home/xxxx/test\n" +
+                "which dvc || { echo \"dvc does not exist\"; exit 1; }; DVC_REPO=git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example\n" +
+                "DVC_DATA_PATH=/home/<YOUR-NAME-OR-ORG>/test\n" +
                 "DVC_DATA_LOCATION=test\n" +
                 "DVC_VERSION=iris_v2.3.1\n" +
                 "DVC_MESSAGE=\"add test iris data\"\n" +
@@ -104,7 +104,7 @@ public class DvcTaskTest {
     public void testDvcDownload() throws Exception{
         DvcTask dvcTask = initTask(createDownloadParameters());
         Assert.assertEquals(dvcTask.buildCommand(),
-                "which dvc || { echo \"dvc does not exist\"; exit 1; }; DVC_REPO=git@github.com:xxxx/dvc-data-repository-example\n" +
+                "which dvc || { echo \"dvc does not exist\"; exit 1; }; DVC_REPO=git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example\n" +
                 "DVC_DATA_PATH=data\n" +
                 "DVC_DATA_LOCATION=iris\n" +
                 "DVC_VERSION=iris_v2.3.1\n" +
@@ -115,7 +115,7 @@ public class DvcTaskTest {
     public void testInitDvc() throws Exception{
         DvcTask dvcTask = initTask(createInitDvcParameters());
         Assert.assertEquals(dvcTask.buildCommand(),
-                "which dvc || { echo \"dvc does not exist\"; exit 1; }; DVC_REPO=git@github.com:xxxx/dvc-data-repository-example\n" +
+                "which dvc || { echo \"dvc does not exist\"; exit 1; }; DVC_REPO=git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example\n" +
                 "git clone $DVC_REPO dvc-repository; cd dvc-repository; pwd\n" +
                 "dvc init || exit 1\n" +
                 "dvc remote add origin ~/.dvc_test -d\n" +
@@ -125,8 +125,8 @@ public class DvcTaskTest {
     private DvcParameters createUploadParameters() {
         DvcParameters parameters = new DvcParameters();
         parameters.setDvcTaskType(DvcConstants.TASK_TYPE_UPLOAD);
-        parameters.setDvcRepository("git@github.com:xxxx/dvc-data-repository-example");
-        parameters.setDvcLoadSaveDataPath("/home/xxxx/test");
+        parameters.setDvcRepository("git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example");
+        parameters.setDvcLoadSaveDataPath("/home/<YOUR-NAME-OR-ORG>/test");
         parameters.setDvcDataLocation("test");
         parameters.setDvcVersion("iris_v2.3.1");
         parameters.setDvcMessage("add test iris data");
@@ -136,7 +136,7 @@ public class DvcTaskTest {
     private DvcParameters createDownloadParameters() {
         DvcParameters parameters = new DvcParameters();
         parameters.setDvcTaskType(DvcConstants.TASK_TYPE_DOWNLOAD);
-        parameters.setDvcRepository("git@github.com:xxxx/dvc-data-repository-example");
+        parameters.setDvcRepository("git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example");
         parameters.setDvcLoadSaveDataPath("data");
         parameters.setDvcDataLocation("iris");
         parameters.setDvcVersion("iris_v2.3.1");
@@ -146,7 +146,7 @@ public class DvcTaskTest {
     private DvcParameters createInitDvcParameters() {
         DvcParameters parameters = new DvcParameters();
         parameters.setDvcTaskType(DvcConstants.TASK_TYPE_INIT_DVC);
-        parameters.setDvcRepository("git@github.com:xxxx/dvc-data-repository-example");
+        parameters.setDvcRepository("git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example");
         parameters.setDvcStoreUrl("~/.dvc_test");
         return parameters;
     }

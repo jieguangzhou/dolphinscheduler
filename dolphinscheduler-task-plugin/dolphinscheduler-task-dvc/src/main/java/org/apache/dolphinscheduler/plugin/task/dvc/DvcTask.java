@@ -112,7 +112,7 @@ public class DvcTask extends AbstractTaskExecutor {
         }else if (taskType.equals(DvcConstants.TASK_TYPE_INIT_DVC)){
             command = buildInitDvcCommond();
         }
-        logger.info(command);
+        logger.info("Run DVC task with command: \n{}", command);
         return command;
     }
 
