@@ -76,7 +76,7 @@ Used to upload and update data and record version numbers.
 
 The example above shows that:
 
-Upload data `/home/lucky/xxxx/MLflow-AutoML/data/iris` to the root directory of repository `git@github.com:xxxx/dvc-data-repository-example.git`. The file or folder of data is named `iris`.
+Upload data `/home/lucky/MLflow-AutoML/data/iris` to the root directory of repository `git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example.git`. The file or folder of data is named `iris`.
 
 Then run `git tag "iris_v1.0" -m "init iris data"`. Record the version tag `iris_v1.0` and the version message `inir Iris data`.
 
