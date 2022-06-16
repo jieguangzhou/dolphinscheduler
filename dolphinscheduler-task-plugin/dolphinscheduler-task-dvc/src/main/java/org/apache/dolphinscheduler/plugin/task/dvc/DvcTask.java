@@ -42,7 +42,7 @@ import java.util.Map;
 public class DvcTask extends AbstractTaskExecutor {
 
     /**
-     * shell parameters
+     * dvc parameters
      */
     private DvcParameters parameters;
 
@@ -70,12 +70,12 @@ public class DvcTask extends AbstractTaskExecutor {
 
     @Override
     public void init() {
-        logger.info("shell task params {}", taskExecutionContext.getTaskParams());
+        logger.info("dvc task params {}", taskExecutionContext.getTaskParams());
 
         parameters = JSONUtils.parseObject(taskExecutionContext.getTaskParams(), DvcParameters.class);
 
         if (!parameters.checkParameters()) {
-            throw new RuntimeException("shell task params is not valid");
+            throw new RuntimeException("dvc task params is not valid");
         }
     }
 
@@ -90,7 +90,7 @@ public class DvcTask extends AbstractTaskExecutor {
             setProcessId(commandExecuteResult.getProcessId());
             parameters.dealOutParam(shellCommandExecutor.getVarPool());
         } catch (Exception e) {
-            logger.error("shell task error", e);
+            logger.error("dvc task error", e);
             setExitStatusCode(EXIT_CODE_FAILURE);
             throw e;
         }
