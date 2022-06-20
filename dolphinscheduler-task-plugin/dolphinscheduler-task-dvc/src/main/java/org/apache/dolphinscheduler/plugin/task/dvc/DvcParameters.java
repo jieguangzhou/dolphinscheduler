@@ -18,8 +18,7 @@
 package org.apache.dolphinscheduler.plugin.task.dvc;
 
 import org.apache.dolphinscheduler.plugin.task.api.parameters.AbstractParameters;
-
-import java.util.HashMap;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DvcParameters extends AbstractParameters {
 
@@ -27,7 +26,7 @@ public class DvcParameters extends AbstractParameters {
      * common parameters
      */
 
-    private String dvcTaskType;
+    private TaskTypeEnum dvcTaskType;
 
     private String dvcRepository;
 
@@ -41,11 +40,11 @@ public class DvcParameters extends AbstractParameters {
 
     private String dvcStoreUrl;
 
-    public void setDvcTaskType(String dvcTaskType) {
+    public void setDvcTaskType(TaskTypeEnum dvcTaskType) {
         this.dvcTaskType = dvcTaskType;
     }
 
-    public String getDvcTaskType() {
+    public TaskTypeEnum getDvcTaskType() {
         return dvcTaskType;
     }
 
@@ -104,3 +103,13 @@ public class DvcParameters extends AbstractParameters {
     }
 
 };
+
+
+enum TaskTypeEnum {
+    @JsonProperty("Upload")
+    UPLOAD,
+    @JsonProperty("Download")
+    DOWNLOAD,
+    @JsonProperty("Init DVC")
+    INIT;
+}
