@@ -40,10 +40,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({
-        JSONUtils.class,
-        PropertyUtils.class,
-})
+@PrepareForTest({JSONUtils.class, PropertyUtils.class,})
 @PowerMockIgnore({"javax.*"})
 @SuppressStaticInitializationFor("org.apache.dolphinscheduler.spi.utils.PropertyUtils")
 public class SagemakerTaskTest {

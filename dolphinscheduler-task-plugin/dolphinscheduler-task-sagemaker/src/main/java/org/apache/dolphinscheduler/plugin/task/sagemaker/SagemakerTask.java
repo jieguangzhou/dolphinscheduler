@@ -96,7 +96,7 @@ public class SagemakerTask extends AbstractTaskExecutor {
         utils.stopPipelineExecution();
     }
 
-    public int handleStartPipeline () throws Exception {
+    public int handleStartPipeline() throws Exception {
         int exitStatusCode;
         StartPipelineExecutionRequest request = createStartPipelineRequest();
 
@@ -127,7 +127,7 @@ public class SagemakerTask extends AbstractTaskExecutor {
         StartPipelineExecutionRequest startPipelineRequest;
         try {
             startPipelineRequest = objectMapper.readValue(requestJson, StartPipelineExecutionRequest.class);
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.error("can not parse SagemakerRequestJson from json: {}", e.getMessage());
             throw new Exception("parse SagemakerRequestJson error");
         }
@@ -147,7 +147,7 @@ public class SagemakerTask extends AbstractTaskExecutor {
         return ParameterUtils.convertParameterPlaceholders(requestJson, ParamUtils.convert(paramsMap));
     }
 
-    private AmazonSageMaker createClient () throws Exception {
+    private AmazonSageMaker createClient() throws Exception {
         AmazonSageMakerClientBuilder builder = AmazonSageMakerClientBuilder.standard();
 
         AWSCredentialsProvider awsCredentialsProvider = AwsConfig.getCredentials();
@@ -163,7 +163,7 @@ public class SagemakerTask extends AbstractTaskExecutor {
         AmazonSageMaker client;
         try {
             client = builder.build();
-        }catch (Exception e) {
+        } catch (Exception e) {
             logger.error("connect aws error: {} please check aws configuration or aws region", e.getMessage());
             throw new Exception("connect aws error", e);
         }

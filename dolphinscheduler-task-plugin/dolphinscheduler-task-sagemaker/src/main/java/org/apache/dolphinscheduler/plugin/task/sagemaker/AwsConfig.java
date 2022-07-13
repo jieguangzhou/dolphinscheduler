@@ -24,7 +24,7 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 
 public class AwsConfig {
-    public static AWSCredentialsProvider getCredentials(){
+    public static AWSCredentialsProvider getCredentials() {
         String awsAccessKeyId = PropertyUtils.getString(TaskConstants.AWS_ACCESS_KEY_ID);
         String awsSecretAccessKey = PropertyUtils.getString(TaskConstants.AWS_SECRET_ACCESS_KEY);
         AWSCredentialsProvider awsCredentialsProvider;

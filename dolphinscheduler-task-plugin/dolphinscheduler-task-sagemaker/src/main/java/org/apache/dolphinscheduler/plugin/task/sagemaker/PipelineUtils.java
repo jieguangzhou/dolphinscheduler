@@ -84,7 +84,7 @@ public class PipelineUtils {
 
     public int checkPipelineExecutionStatus() {
         describePipelineExecution();
-        while (pipelineStatus.equals("Executing")){
+        while (pipelineStatus.equals("Executing")) {
             logger.info("check Pipeline Steps running");
             listPipelineExecutionSteps();
             ThreadUtils.sleep(SagemakerConstants.checkPipelineExecutionStatusInterval);
@@ -92,7 +92,7 @@ public class PipelineUtils {
         }
 
         int exitStatusCode = TaskConstants.EXIT_CODE_FAILURE;
-        if (pipelineStatus.equals("Succeeded")){
+        if (pipelineStatus.equals("Succeeded")) {
             exitStatusCode = TaskConstants.EXIT_CODE_SUCCESS;
         }
         logger.info("exit : {}", exitStatusCode);
@@ -117,7 +117,7 @@ public class PipelineUtils {
         List<PipelineExecutionStep> steps = result.getPipelineExecutionSteps();
         Collections.reverse(steps);
         logger.info("pipelineStepsStatus: ");
-        for (PipelineExecutionStep step: steps) {
+        for (PipelineExecutionStep step : steps) {
             logger.info(step.toString());
         }
     }
