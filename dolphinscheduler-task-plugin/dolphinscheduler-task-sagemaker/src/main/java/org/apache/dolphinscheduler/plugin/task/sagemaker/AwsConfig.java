@@ -17,11 +17,12 @@
 
 package org.apache.dolphinscheduler.plugin.task.sagemaker;
 
+import org.apache.dolphinscheduler.plugin.task.api.TaskConstants;
+import org.apache.dolphinscheduler.spi.utils.PropertyUtils;
+
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import org.apache.dolphinscheduler.plugin.task.api.TaskConstants;
-import org.apache.dolphinscheduler.spi.utils.PropertyUtils;
 
 public class AwsConfig {
     public static AWSCredentialsProvider getCredentials() {

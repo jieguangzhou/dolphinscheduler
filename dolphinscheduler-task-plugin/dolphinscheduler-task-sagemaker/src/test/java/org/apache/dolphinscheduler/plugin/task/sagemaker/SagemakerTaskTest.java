@@ -17,11 +17,15 @@
 
 package org.apache.dolphinscheduler.plugin.task.sagemaker;
 
-import com.amazonaws.services.sagemaker.model.StartPipelineExecutionRequest;
-import org.apache.commons.io.IOUtils;
 import org.apache.dolphinscheduler.plugin.task.api.TaskExecutionContext;
 import org.apache.dolphinscheduler.spi.utils.JSONUtils;
 import org.apache.dolphinscheduler.spi.utils.PropertyUtils;
+
+import org.apache.commons.io.IOUtils;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,8 +37,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import com.amazonaws.services.sagemaker.model.StartPipelineExecutionRequest;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JSONUtils.class, PropertyUtils.class,})

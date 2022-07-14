@@ -17,21 +17,31 @@
 
 package org.apache.dolphinscheduler.plugin.task.sagemaker;
 
-import com.amazonaws.services.sagemaker.AmazonSageMaker;
-import com.amazonaws.services.sagemaker.model.*;
 import org.apache.dolphinscheduler.common.thread.ThreadUtils;
 import org.apache.dolphinscheduler.plugin.task.api.TaskConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.amazonaws.services.sagemaker.AmazonSageMaker;
+import com.amazonaws.services.sagemaker.model.DescribePipelineExecutionRequest;
+import com.amazonaws.services.sagemaker.model.DescribePipelineExecutionResult;
+import com.amazonaws.services.sagemaker.model.ListPipelineExecutionStepsRequest;
+import com.amazonaws.services.sagemaker.model.ListPipelineExecutionStepsResult;
+import com.amazonaws.services.sagemaker.model.PipelineExecutionStep;
+import com.amazonaws.services.sagemaker.model.StartPipelineExecutionRequest;
+import com.amazonaws.services.sagemaker.model.StartPipelineExecutionResult;
+import com.amazonaws.services.sagemaker.model.StopPipelineExecutionRequest;
+import com.amazonaws.services.sagemaker.model.StopPipelineExecutionResult;
 
 public class PipelineUtils {
 
 
     protected final Logger logger = LoggerFactory.getLogger(String.format(TaskConstants.TASK_LOG_LOGGER_NAME_FORMAT, getClass()));
-    final private AmazonSageMaker client;
+    private final AmazonSageMaker client;
     private String pipelineExecutionArn;
     private String clientRequestToken;
     private String pipelineStatus;
