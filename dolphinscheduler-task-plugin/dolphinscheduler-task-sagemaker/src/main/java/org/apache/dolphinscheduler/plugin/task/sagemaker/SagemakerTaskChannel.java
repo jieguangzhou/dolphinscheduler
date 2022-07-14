@@ -26,7 +26,6 @@ import org.apache.dolphinscheduler.spi.utils.JSONUtils;
 
 public class SagemakerTaskChannel implements TaskChannel {
 
-
     @Override
     public void cancelApplication(boolean status) {
 

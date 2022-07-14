@@ -57,7 +57,6 @@ public class SagemakerTaskTest {
         sagemakerTask.init();
     }
 
-
     @Test
     public void testStartPipelineRequest() throws Exception {
         StartPipelineExecutionRequest request = sagemakerTask.createStartPipelineRequest();
@@ -67,7 +66,6 @@ public class SagemakerTaskTest {
         Assert.assertEquals(request.getPipelineName(), "AbalonePipeline");
         Assert.assertEquals(request.getParallelismConfiguration().getMaxParallelExecutionSteps(), new Integer(1));
     }
-
 
     private String buildParameters() {
         SagemakerParameters parameters = new SagemakerParameters();
