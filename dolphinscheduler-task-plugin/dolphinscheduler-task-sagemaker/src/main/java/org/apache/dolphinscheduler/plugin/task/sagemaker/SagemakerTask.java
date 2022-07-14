@@ -17,13 +17,12 @@
 
 package org.apache.dolphinscheduler.plugin.task.sagemaker;
 
-import static com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT;
-import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static com.fasterxml.jackson.databind.DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL;
-import static com.fasterxml.jackson.databind.MapperFeature.REQUIRE_SETTERS_FOR_GETTERS;
-
-import static org.apache.dolphinscheduler.plugin.task.api.TaskConstants.EXIT_CODE_FAILURE;
-
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.services.sagemaker.AmazonSageMaker;
+import com.amazonaws.services.sagemaker.AmazonSageMakerClientBuilder;
+import com.amazonaws.services.sagemaker.model.StartPipelineExecutionRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import org.apache.dolphinscheduler.plugin.task.api.AbstractTaskExecutor;
 import org.apache.dolphinscheduler.plugin.task.api.TaskConstants;
 import org.apache.dolphinscheduler.plugin.task.api.TaskExecutionContext;
@@ -32,31 +31,31 @@ import org.apache.dolphinscheduler.plugin.task.api.parser.ParamUtils;
 import org.apache.dolphinscheduler.plugin.task.api.parser.ParameterUtils;
 import org.apache.dolphinscheduler.spi.utils.JSONUtils;
 
-import com.amazonaws.services.sagemaker.AmazonSageMakerClientBuilder;
-import com.amazonaws.services.sagemaker.AmazonSageMaker;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.services.sagemaker.model.StartPipelineExecutionRequest;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-
 import java.util.Map;
+
+import static com.fasterxml.jackson.databind.DeserializationFeature.*;
+import static com.fasterxml.jackson.databind.MapperFeature.REQUIRE_SETTERS_FOR_GETTERS;
+import static org.apache.dolphinscheduler.plugin.task.api.TaskConstants.EXIT_CODE_FAILURE;
 
 /**
  * SageMaker task
  */
 public class SagemakerTask extends AbstractTaskExecutor {
 
-    /**
-     * SageMaker parameters
-     */
-    private SagemakerParameters parameters;
-
+    private static final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .configure(ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true)
+            .configure(READ_UNKNOWN_ENUM_VALUES_AS_NULL, true)
+            .configure(REQUIRE_SETTERS_FOR_GETTERS, true)
+            .setPropertyNamingStrategy(new PropertyNamingStrategy.UpperCamelCaseStrategy());
     /**
      * taskExecutionContext
      */
     final private TaskExecutionContext taskExecutionContext;
-
+    /**
+     * SageMaker parameters
+     */
+    private SagemakerParameters parameters;
     private PipelineUtils utils;
 
     public SagemakerTask(TaskExecutionContext taskExecutionContext) {
@@ -117,7 +116,6 @@ public class SagemakerTask extends AbstractTaskExecutor {
         return exitStatusCode;
     }
 
-
     public StartPipelineExecutionRequest createStartPipelineRequest() throws Exception {
 
         String requestJson = parameters.getSagemakerRequestJson();
@@ -169,12 +167,5 @@ public class SagemakerTask extends AbstractTaskExecutor {
         }
         return client;
     }
-
-    private static final ObjectMapper objectMapper = new ObjectMapper()
-            .configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
-            .configure(ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true)
-            .configure(READ_UNKNOWN_ENUM_VALUES_AS_NULL, true)
-            .configure(REQUIRE_SETTERS_FOR_GETTERS, true)
-            .setPropertyNamingStrategy(new PropertyNamingStrategy.UpperCamelCaseStrategy());
 
 }

@@ -18,11 +18,10 @@
 package org.apache.dolphinscheduler.plugin.task.sagemaker;
 
 public class SagemakerConstants {
+    public static final int checkPipelineExecutionStatusInterval = 5000;
+    public static final int pipelineMaxResults = 100;
+
     private SagemakerConstants() {
         throw new IllegalStateException("Utility class");
     }
-
-    public static final int checkPipelineExecutionStatusInterval = 5000;
-
-    public static final int pipelineMaxResults = 100;
 }

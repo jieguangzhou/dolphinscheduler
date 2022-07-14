@@ -18,18 +18,9 @@
 package org.apache.dolphinscheduler.plugin.task.sagemaker;
 
 import com.amazonaws.services.sagemaker.AmazonSageMaker;
-import com.amazonaws.services.sagemaker.model.StartPipelineExecutionRequest;
-import com.amazonaws.services.sagemaker.model.StartPipelineExecutionResult;
-import com.amazonaws.services.sagemaker.model.StopPipelineExecutionRequest;
-import com.amazonaws.services.sagemaker.model.StopPipelineExecutionResult;
-import com.amazonaws.services.sagemaker.model.DescribePipelineExecutionRequest;
-import com.amazonaws.services.sagemaker.model.DescribePipelineExecutionResult;
-import com.amazonaws.services.sagemaker.model.ListPipelineExecutionStepsRequest;
-import com.amazonaws.services.sagemaker.model.ListPipelineExecutionStepsResult;
-import com.amazonaws.services.sagemaker.model.PipelineExecutionStep;
-
-import org.apache.dolphinscheduler.plugin.task.api.TaskConstants;
+import com.amazonaws.services.sagemaker.model.*;
 import org.apache.dolphinscheduler.common.thread.ThreadUtils;
+import org.apache.dolphinscheduler.plugin.task.api.TaskConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,15 +29,12 @@ import java.util.List;
 
 public class PipelineUtils {
 
-    final private AmazonSageMaker client;
-
-    private String pipelineExecutionArn;
-
-    private String clientRequestToken;
-
-    private String pipelineStatus;
 
     protected final Logger logger = LoggerFactory.getLogger(String.format(TaskConstants.TASK_LOG_LOGGER_NAME_FORMAT, getClass()));
+    final private AmazonSageMaker client;
+    private String pipelineExecutionArn;
+    private String clientRequestToken;
+    private String pipelineStatus;
 
     public PipelineUtils(AmazonSageMaker client) {
         this.client = client;
@@ -81,7 +69,6 @@ public class PipelineUtils {
 
     }
 
-
     public int checkPipelineExecutionStatus() {
         describePipelineExecution();
         while (pipelineStatus.equals("Executing")) {
@@ -107,7 +94,6 @@ public class PipelineUtils {
         pipelineStatus = result.getPipelineExecutionStatus();
         logger.info("PipelineExecutionStatus: {}", pipelineStatus);
     }
-
 
     private void listPipelineExecutionSteps() {
         ListPipelineExecutionStepsRequest request = new ListPipelineExecutionStepsRequest();
