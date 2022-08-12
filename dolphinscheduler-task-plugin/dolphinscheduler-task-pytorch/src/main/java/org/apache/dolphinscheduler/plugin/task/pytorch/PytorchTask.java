@@ -35,10 +35,10 @@ import java.util.Map;
 
 public class PytorchTask extends AbstractTaskExecutor {
 
+    private final ShellCommandExecutor shellCommandExecutor;
     protected PytorchParameters pytorchParameters;
     protected TaskExecutionContext taskRequest;
     private PythonEnvManager pythonEnvManager;
-    private final ShellCommandExecutor shellCommandExecutor;
 
     public PytorchTask(TaskExecutionContext taskRequest) {
         super(taskRequest);
@@ -98,7 +98,6 @@ public class PytorchTask extends AbstractTaskExecutor {
             args.add(String.format("%s %s", getPythonCommand(), pytorchParameters.getScriptPath()));
 
         }
-
 
         Map<String, Property> paramsMap = taskRequest.getPrepareParamsMap();
         String command = ParameterUtils.convertParameterPlaceholders(String.join("\n", args), ParamUtils.convert(paramsMap));

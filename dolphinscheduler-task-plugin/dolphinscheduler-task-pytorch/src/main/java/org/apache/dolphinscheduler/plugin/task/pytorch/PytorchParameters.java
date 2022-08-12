@@ -17,10 +17,14 @@
 
 package org.apache.dolphinscheduler.plugin.task.pytorch;
 
+import org.apache.dolphinscheduler.plugin.task.api.model.ResourceInfo;
 import org.apache.dolphinscheduler.plugin.task.api.parameters.AbstractParameters;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,11 +34,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class PytorchParameters extends AbstractParameters {
-
-    /**
-     * request script
-     */
-
 
     private Boolean isCreateEnvironment = false;
 
@@ -50,10 +49,17 @@ public class PytorchParameters extends AbstractParameters {
 
     private String requirements = "requirements.txt";
 
-    private String condaVer = "requirements.txt";
-
     private String condaPythonVersion = "3.9";
 
+    /**
+     * resource list
+     */
+    private List<ResourceInfo> resourceList;
+
+    @Override
+    public List<ResourceInfo> getResourceFilesList() {
+        return resourceList;
+    }
 
     @Override
     public boolean checkParameters() {
@@ -85,6 +91,16 @@ public class PytorchParameters extends AbstractParameters {
         File newFile = new File(newPath);
         if (newFile.exists() && !sourceFile.exists()) {
             possiblePath = newPath;
+        } else if (resourceList != null) {
+            String newPathResource = StringUtils.removeStart(newPath, "./");
+            for (ResourceInfo resourceInfo : resourceList) {
+                if (resourceInfo.getResourceName().equals("/" + newPathResource)) {
+                    possiblePath = newPath;
+                    break;
+                }
+            }
+
+
         }
         return possiblePath;
 

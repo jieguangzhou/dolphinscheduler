@@ -44,14 +44,9 @@ public class PythonEnvManager {
     private static final String VIRTUALENV_BUILD = "virtualenv -p ${PYTHON_HOME} %s";
 
     private static final String INSTALL_COMMAND = "python -m pip install -r %s";
-    /**
-     * support:
-     * python command path,
-     * requirements.txt (or xxx.txt)
-     * conda: conda
-     * virtualenv: env_name
-     */
+
     private String pythonEnvTool = "virtualenv";
+
     private String condaPythonVersion = "3.9";
 
     public String getBuildEnvCommand(String requirementPath) {
