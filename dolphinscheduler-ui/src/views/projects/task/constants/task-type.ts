@@ -42,6 +42,7 @@ export type TaskType =
   | 'DINKY'
   | 'SAGEMAKER'
   | 'CHUNJUN'
+  | 'PYTORCH'
 
 export const TASK_TYPES_MAP = {
   SHELL: {
@@ -137,6 +138,10 @@ export const TASK_TYPES_MAP = {
   },
   CHUNJUN: {
     alias: 'CHUNJUN',
+    helperLinkDisable: true
+  },
+  PYTORCH: {
+    alias: 'Pytorch',
     helperLinkDisable: true
   }
 } as { [key in TaskType]: { alias: string; helperLinkDisable?: boolean } }
