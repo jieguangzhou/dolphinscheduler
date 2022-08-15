@@ -18,6 +18,8 @@
 package org.apache.dolphinscheduler.plugin.task.pytorch;
 
 import static org.apache.dolphinscheduler.plugin.task.api.TaskConstants.RWXR_XR_X;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.dolphinscheduler.plugin.task.api.TaskExecutionContext;
 import org.apache.dolphinscheduler.plugin.task.api.TaskExecutionContextCacheManager;
@@ -84,7 +86,28 @@ public class PytorchTaskTest {
     }
 
     @Test
-    public void testBuildPythonCommandWithoutCreateEnvironment() {
+    public void testGitProject() {
+
+        assertFalse(GitProjectManager.isGitPath("dolphinscheduler/test"));
+        assertFalse(GitProjectManager.isGitPath("/dolphinscheduler/test"));
+        assertTrue(GitProjectManager.isGitPath("https://github.com/apache/dolphinscheduler.git"));
+        assertTrue(GitProjectManager.isGitPath("git@github.com:apache/dolphinscheduler.git"));
+        assertTrue(GitProjectManager.isGitPath("git@github.com:apache/dolphinscheduler.git#doc"));
+
+        GitProjectManager gpm1 = new GitProjectManager();
+        gpm1.setPath("git@github.com:apache/dolphinscheduler.git#doc");
+        Assert.assertEquals(gpm1.getGitUrl(), "git@github.com:apache/dolphinscheduler.git");
+        Assert.assertEquals(gpm1.getGitLocalPath(), "./GIT_PROJECT/doc");
+
+        GitProjectManager gpm2 = new GitProjectManager();
+        gpm2.setPath("git@github.com:apache/dolphinscheduler.git");
+        Assert.assertEquals(gpm2.getGitUrl(), "git@github.com:apache/dolphinscheduler.git");
+        Assert.assertEquals(gpm2.getGitLocalPath(), "./GIT_PROJECT");
+
+    }
+
+    @Test
+    public void testBuildPythonCommandWithoutCreateEnvironment() throws Exception {
         PytorchParameters parameters = new PytorchParameters();
         parameters.setScript("main.py");
         parameters.setScriptParams("--epochs=1 --dry-run");
@@ -110,7 +133,7 @@ public class PytorchTaskTest {
 
 
     @Test
-    public void testBuildPythonCommandWithCreateCondeEnv() {
+    public void testBuildPythonCommandWithCreateCondeEnv() throws Exception {
         PytorchParameters parameters = new PytorchParameters();
         parameters.setPythonPath(pythonPath);
         parameters.setIsCreateEnvironment(true);
@@ -128,7 +151,7 @@ public class PytorchTaskTest {
     }
 
     @Test
-    public void testBuildPythonCommandWithCreateVenvEnv() {
+    public void testBuildPythonCommandWithCreateVenvEnv() throws Exception {
         PytorchParameters parameters = new PytorchParameters();
         parameters.setPythonPath(pythonPath);
         parameters.setIsCreateEnvironment(true);

@@ -55,7 +55,6 @@ public class PytorchTask extends AbstractTaskExecutor {
 
         pytorchParameters = JSONUtils.parseObject(taskRequest.getTaskParams(), PytorchParameters.class);
 
-
         if (!pytorchParameters.checkParameters()) {
             throw new TaskException("python task params is not valid");
         }
@@ -81,8 +80,19 @@ public class PytorchTask extends AbstractTaskExecutor {
         }
     }
 
-    public String buildPythonExecuteCommand() {
+
+    public String buildPythonExecuteCommand() throws Exception {
         List<String> args = new ArrayList<>();
+
+        String pythonPath = pytorchParameters.getPythonPath();
+
+        if (GitProjectManager.isGitPath(pythonPath)) {
+            GitProjectManager gpm = new GitProjectManager();
+            gpm.setPath(pythonPath);
+            gpm.setBaseDir(taskRequest.getExecutePath());
+            gpm.prepareProject();
+            pytorchParameters.setPythonPath(gpm.getGitLocalPath());
+        }
 
         args.add(String.format("export PYTHONPATH=%s", pytorchParameters.getPythonPath()));
 
@@ -105,7 +115,7 @@ public class PytorchTask extends AbstractTaskExecutor {
     }
 
     private String getPythonCommand() {
-        String pythonCommand = "";
+        String pythonCommand;
         if (pytorchParameters.getIsCreateEnvironment()) {
             pythonCommand = pythonEnvManager.getPythonCommand();
         } else {

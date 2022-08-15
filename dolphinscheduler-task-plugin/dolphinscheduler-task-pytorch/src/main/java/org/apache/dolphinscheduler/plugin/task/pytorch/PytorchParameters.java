@@ -36,21 +36,13 @@ import lombok.ToString;
 public class PytorchParameters extends AbstractParameters {
 
     private Boolean isCreateEnvironment = false;
-
     private String pythonPath = ".";
-
     private String script;
-
     private String scriptParams;
-
     private String pythonCommand = "${PYTHON_HOME}";
-
     private String pythonEnvTool = PythonEnvManager.ENV_TOOL_VENV;
-
     private String requirements = "requirements.txt";
-
     private String condaPythonVersion = "3.9";
-
     /**
      * resource list
      */
@@ -66,6 +58,7 @@ public class PytorchParameters extends AbstractParameters {
         return true;
     }
 
+
     public String getRequirementPath() {
         return getPossiblePath(requirements);
     }
@@ -79,6 +72,7 @@ public class PytorchParameters extends AbstractParameters {
         }
         return command;
     }
+
 
     public String getScriptPath() {
         return getPossiblePath(script);
