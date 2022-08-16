@@ -53,7 +53,6 @@ The preceding two parameters are used to minimize the running of the configurati
 
 - **Project Path** ：Set environment variable `PYTHONPATH` to load the Python package/project code at this path when running Python scripts。Support for local paths or Git URL.
   - If it is a local path, it is used as environment variable `PYTHONPATH`.
-  - 如果为Git URL （以`git@ | https:// | http:// `前缀），则会下载项目，并将下载后存放地址作为新的**python项目地址**，若需要运行子文件夹下的项目，可以添加 `#subdirectory` 来配置。
   - If the GIT URL (`git @ | https:// | http://` prefix), can download the project, and the deposit after download path as new `Project Path`, if need to run a folder under the project, you can add `#subdirectory` after GIT URL.
 
 #### Python environment parameters
