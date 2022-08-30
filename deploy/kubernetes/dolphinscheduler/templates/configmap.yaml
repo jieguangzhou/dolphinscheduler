@@ -24,3 +24,4 @@ metadata:
 data:
   common_properties: |-
 {{ tpl (.Files.Get "resources/config/common.properties") . | indent 4 }}
+

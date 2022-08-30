@@ -36,21 +36,16 @@ repos:
     rev: 4.0.1
     hooks:
       - id: flake8
-        additional_dependencies: [
-            'flake8-docstrings>=1.6',
-            'flake8-black>=0.2',
-        ]
+        additional_dependencies: ["flake8-docstrings>=1.6", "flake8-black>=0.2"]
         # pre-commit run in the root, so we have to point out the full path of configuration
-        args: [
-            --config, 
-            dolphinscheduler-python/pydolphinscheduler/.flake8
-        ]
+        args: [--config, dolphinscheduler-python/pydolphinscheduler/.flake8]
   - repo: https://github.com/pycqa/autoflake
     rev: v1.4
     hooks:
       - id: autoflake
-        args: [
+        args:
+          [
             --remove-all-unused-imports,
             --ignore-init-module-imports,
-            --in-place
-        ]
+            --in-place,
+          ]

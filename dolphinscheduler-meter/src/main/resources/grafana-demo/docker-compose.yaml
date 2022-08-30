@@ -15,12 +15,12 @@
 # limitations under the License.
 #
 
-version: '2.1'
+version: "2.1"
 
 services:
   prom:
     image: prom/prometheus
-    networks: [ test ]
+    networks: [test]
     ports:
       - "9090:9090"
     volumes:
@@ -30,7 +30,7 @@ services:
 
   grafana:
     image: grafana/grafana
-    networks: [ test ]
+    networks: [test]
     ports:
       # due to the DolphinScheduler frontend port is 3000, so we change the grafana default port to 3001.
       - "3001:3000"

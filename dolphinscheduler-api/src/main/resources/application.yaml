@@ -86,7 +86,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: '*'
+        include: "*"
   endpoint:
     health:
       enabled: true
@@ -169,10 +169,9 @@ traffic:
     tenant-switch: false
     default-tenant-qps-rate: 10
     #customize-tenant-qps-rate:
-      # eg.
-      #tenant1: 11
-      #tenant2: 20
-
+    # eg.
+    #tenant1: 11
+    #tenant2: 20
 
 # Override by profile
 

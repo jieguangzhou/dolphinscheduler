@@ -687,7 +687,8 @@
                     <formats>
                         <format>
                             <includes>
-                                <include>**/*.yaml</include>
+                                <include>deploy/docker/**/*.yaml</include>
+                                <include>dolphinscheduler*/*.yaml</include>
                             </includes>
                             <prettier>
                                 <prettierVersion>2.0.5</prettierVersion>

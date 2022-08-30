@@ -44,3 +44,4 @@ mergeable:
     pass:
       - do: labels
         delete: 'sql not sync'
+

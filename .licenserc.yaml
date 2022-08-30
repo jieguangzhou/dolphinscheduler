@@ -31,20 +31,20 @@ header:
     - dolphinscheduler-dao/src/main/resources/sql/soft_version
     - .mvn
     - .gitattributes
-    - '**/licenses/**/LICENSE-*'
-    - '**/*.md'
-    - '**/*.svg'
-    - '**/*.json'
-    - '**/*.iml'
-    - '**/*.ini'
-    - '**/.babelrc'
-    - '**/.eslintignore'
-    - '**/.gitignore'
-    - '**/LICENSE'
-    - '**/NOTICE'
-    - '**/node_modules/**'
-    - '.github/actions/comment-on-issue/**'
-    - '.github/actions/translate-on-issue/**'
-    - '**/.gitkeep'
+    - "**/licenses/**/LICENSE-*"
+    - "**/*.md"
+    - "**/*.svg"
+    - "**/*.json"
+    - "**/*.iml"
+    - "**/*.ini"
+    - "**/.babelrc"
+    - "**/.eslintignore"
+    - "**/.gitignore"
+    - "**/LICENSE"
+    - "**/NOTICE"
+    - "**/node_modules/**"
+    - ".github/actions/comment-on-issue/**"
+    - ".github/actions/translate-on-issue/**"
+    - "**/.gitkeep"
 
   comment: on-failure

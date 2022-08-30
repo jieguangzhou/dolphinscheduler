@@ -152,3 +152,4 @@ volumes:
   dolphinscheduler-logs:
   dolphinscheduler-shared-local:
   dolphinscheduler-resource-local:
+
