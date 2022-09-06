@@ -30,6 +30,8 @@ import com.amazonaws.services.databasemigrationservice.model.Tag;
 public class DmsParameters extends AbstractParameters {
 
     private Boolean isRestartTask = false;
+    private Boolean isJsonFormat = false;
+    private String jsonData ;
     private String replicationTaskIdentifier;
     private String sourceEndpointArn;
     private String targetEndpointArn;
@@ -49,12 +51,13 @@ public class DmsParameters extends AbstractParameters {
     @Override
     public boolean checkParameters() {
         boolean flag;
-        if (isRestartTask) {
-            flag = (replicationTaskArn != null) && (startReplicationTaskType != null);
+        if (isJsonFormat) {
+            flag = jsonData != null;
+        }else if (isRestartTask) {
+            flag = (replicationTaskArn != null);
         }else {
             flag = sourceEndpointArn != null && targetEndpointArn != null && replicationInstanceArn != null
-                    && migrationType != null;
-
+                    && migrationType != null && replicationTaskIdentifier != null && tableMappings != null;
         }
         return flag;
     }

@@ -28,14 +28,14 @@ import org.apache.dolphinscheduler.plugin.task.api.TaskException;
 import org.apache.dolphinscheduler.plugin.task.api.TaskExecutionContext;
 import org.apache.dolphinscheduler.spi.utils.JSONUtils;
 
+import com.amazonaws.services.databasemigrationservice.AWSDatabaseMigrationService;
+import com.amazonaws.services.databasemigrationservice.model.CreateReplicationTaskRequest;
+import com.amazonaws.services.databasemigrationservice.model.StartReplicationTaskRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 
 public class DmsTask extends AbstractTaskExecutor {
 
-    private static final ObjectMapper objectMapper =
-        new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES, false).configure(ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true).configure(READ_UNKNOWN_ENUM_VALUES_AS_NULL, true)
-            .configure(REQUIRE_SETTERS_FOR_GETTERS, true).setPropertyNamingStrategy(new PropertyNamingStrategy.UpperCamelCaseStrategy());
     /**
      * taskExecutionContext
      */
@@ -55,10 +55,8 @@ public class DmsTask extends AbstractTaskExecutor {
     @Override
     public void init() {
         logger.info("Dms task params {}", taskExecutionContext.getTaskParams());
-
         parameters = JSONUtils.parseObject(taskExecutionContext.getTaskParams(), DmsParameters.class);
         initDmsHook();
-
     }
 
     @Override
@@ -72,7 +70,7 @@ public class DmsTask extends AbstractTaskExecutor {
         }
     }
 
-    public int runDmsReplicationTask() {
+    public int runDmsReplicationTask() throws Exception {
         int exitStatusCode;
         exitStatusCode = checkCreateReplicationTask();
         if (exitStatusCode == TaskConstants.EXIT_CODE_SUCCESS) {
@@ -81,12 +79,19 @@ public class DmsTask extends AbstractTaskExecutor {
         return exitStatusCode;
     }
 
-    public int checkCreateReplicationTask() {
+    public int checkCreateReplicationTask() throws Exception {
         if (parameters.getIsRestartTask()) {
             return TaskConstants.EXIT_CODE_SUCCESS;
         }
 
-        Boolean isCreateSuccessfully = dmsHook.createReplicationTask();
+        CreateReplicationTaskRequest request;
+        if (parameters.getIsJsonFormat()) {
+            request = dmsHook.createCreateReplicationTaskRequest();
+        }else {
+            request = dmsHook.createCreateReplicationTaskRequest(parameters.getJsonData());
+        }
+
+        Boolean isCreateSuccessfully = dmsHook.createReplicationTask(request);
         if (!isCreateSuccessfully) {
             return TaskConstants.EXIT_CODE_FAILURE;
         } else {
@@ -94,8 +99,15 @@ public class DmsTask extends AbstractTaskExecutor {
         }
     }
 
-    public int startReplicationTask() {
-        Boolean isStartSuccessfully = dmsHook.startReplicationTask();
+    public int startReplicationTask() throws Exception {
+        StartReplicationTaskRequest request;
+        if (parameters.getIsJsonFormat() && parameters.getIsRestartTask()) {
+            request = dmsHook.createStartReplicationTaskRequest(parameters.getJsonData());
+        }else {
+            request = dmsHook.createStartReplicationTaskRequest();
+        }
+
+        Boolean isStartSuccessfully = dmsHook.startReplicationTask(request);
         if (!isStartSuccessfully) {
             return TaskConstants.EXIT_CODE_FAILURE;
         }
@@ -110,11 +122,18 @@ public class DmsTask extends AbstractTaskExecutor {
 
     public void initDmsHook() {
 
-        dmsHook = new DmsHook();
+        AWSDatabaseMigrationService client = DmsHook.createClient();
+        dmsHook = new DmsHook(client);
         if (parameters.getIsRestartTask()) {
             dmsHook.setReplicationTaskArn(parameters.getReplicationTaskArn());
-            dmsHook.setStartReplicationTaskType(parameters.getStartReplicationTaskType());
-        }else {
+
+            if (parameters.getStartReplicationTaskType() == null) {
+                dmsHook.setStartReplicationTaskType(DmsHook.START_TYPE.RELOAD_TARGET);
+            } else {
+                dmsHook.setStartReplicationTaskType(parameters.getStartReplicationTaskType());
+            }
+
+        } else {
             dmsHook.setReplicationTaskIdentifier(parameters.getReplicationTaskIdentifier());
             dmsHook.setSourceEndpointArn(parameters.getSourceEndpointArn());
             dmsHook.setTargetEndpointArn(parameters.getTargetEndpointArn());
@@ -125,6 +144,12 @@ public class DmsTask extends AbstractTaskExecutor {
             dmsHook.setTags(parameters.getTags());
             dmsHook.setTaskData(parameters.getTaskData());
             dmsHook.setResourceIdentifier(parameters.getResourceIdentifier());
+
+            if (parameters.getStartReplicationTaskType() == null) {
+                dmsHook.setStartReplicationTaskType(DmsHook.START_TYPE.START_REPLICATION);
+            } else {
+                dmsHook.setStartReplicationTaskType(parameters.getStartReplicationTaskType());
+            }
         }
         dmsHook.setCdcStartTime(parameters.getCdcStartTime());
         dmsHook.setCdcStartPosition(parameters.getCdcStartPosition());

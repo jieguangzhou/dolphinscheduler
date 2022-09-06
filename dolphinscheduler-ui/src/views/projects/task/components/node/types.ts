@@ -28,6 +28,7 @@ import type {
   FormRules,
   IJsonItemParams
 } from '@/components/form/types'
+import { TabsTheme } from 'naive-ui/es/tabs/styles'
 export type { EditWorkflowDefinition } from '@/views/projects/workflow/components/dag/types'
 export type {
   IWorkflowTaskInstance,
@@ -375,6 +376,16 @@ interface ITaskParams {
   pythonEnvTool?: string
   requirements?: string
   condaPythonVersion?: string
+  isRestartTask?: boolean
+  isJsonFormat?: boolean
+  jsonData?: string
+  migrationType?: string
+  replicationTaskIdentifier?: string
+  sourceEndpointArn?: string
+  targetEndpointArn?: string
+  replicationInstanceArn?: string
+  tableMappings?: string
+  replicationTaskArn?: string
 }
 
 interface INodeData

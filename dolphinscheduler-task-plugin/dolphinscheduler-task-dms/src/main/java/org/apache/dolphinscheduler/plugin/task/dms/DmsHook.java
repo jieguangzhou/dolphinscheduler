@@ -34,34 +34,28 @@ import com.amazonaws.services.databasemigrationservice.model.StopReplicationTask
 import com.amazonaws.services.databasemigrationservice.model.StopReplicationTaskResult;
 import com.amazonaws.services.databasemigrationservice.model.Tag;
 import com.amazonaws.services.databasemigrationservice.model.TestConnectionRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 
 import lombok.Data;
+import static com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT;
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+import static com.fasterxml.jackson.databind.DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL;
+import static com.fasterxml.jackson.databind.MapperFeature.REQUIRE_SETTERS_FOR_GETTERS;
 
 @Data
 public class DmsHook {
     protected final Logger logger = LoggerFactory.getLogger(String.format(TaskConstants.TASK_LOG_LOGGER_NAME_FORMAT, getClass()));
+    private static final ObjectMapper objectMapper =
+        new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES, false).configure(ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true).configure(READ_UNKNOWN_ENUM_VALUES_AS_NULL, true)
+            .configure(REQUIRE_SETTERS_FOR_GETTERS, true).setPropertyNamingStrategy(new PropertyNamingStrategy.UpperCamelCaseStrategy());
     private AWSDatabaseMigrationService client;
-    private String replicationTaskIdentifier = "task11";
-    private String sourceEndpointArn = "arn:aws:dms:ap-southeast-1:511640773671:endpoint:Z7SUEAL273SCT7OCPYNF5YNDHJDDFRATGNQISOQ";
-    private String targetEndpointArn = "arn:aws:dms:ap-southeast-1:511640773671:endpoint:aws-mysql57-target";
-    private String replicationInstanceArn = "arn:aws:dms:ap-southeast-1:511640773671:rep:dms2c2g";
-    private String migrationType = "full-load";
-    //    private String tableMappings;
-    private String tableMappings = "{\n" +
-        "    \"rules\": [\n" +
-        "        {\n" +
-        "            \"rule-type\": \"selection\",\n" +
-        "            \"rule-id\": \"937765063\",\n" +
-        "            \"rule-name\": \"937765063\",\n" +
-        "            \"object-locator\": {\n" +
-        "                \"schema-name\": \"demo\",\n" +
-        "                \"table-name\": \"%\"\n" +
-        "            },\n" +
-        "            \"rule-action\": \"include\",\n" +
-        "            \"filters\": []\n" +
-        "        }\n" +
-        "    ]\n" +
-        "}";
+    private String replicationTaskIdentifier;
+    private String sourceEndpointArn;
+    private String targetEndpointArn;
+    private String replicationInstanceArn;
+    private String migrationType;
+    private String tableMappings;
     private String replicationTaskSettings;
     private Date cdcStartTime;
     private String cdcStartPosition;
@@ -70,15 +64,14 @@ public class DmsHook {
     private String taskData;
     private String resourceIdentifier;
     private String replicationTaskArn;
-    private String startReplicationTaskType = "start-replication";
+    private String startReplicationTaskType;
 
-    public DmsHook() {
-        client = createClient();
+    public DmsHook(AWSDatabaseMigrationService client) {
+        this.client = client;
     }
 
-    public Boolean createReplicationTask() {
-        logger.info("createReplicationTask ......");
-        CreateReplicationTaskRequest request = new CreateReplicationTaskRequest()
+    public CreateReplicationTaskRequest createCreateReplicationTaskRequest() {
+        return new CreateReplicationTaskRequest()
             .withReplicationTaskIdentifier(replicationTaskIdentifier)
             .withSourceEndpointArn(sourceEndpointArn)
             .withTargetEndpointArn(targetEndpointArn)
@@ -92,7 +85,14 @@ public class DmsHook {
             .withTags(tags)
             .withTaskData(taskData)
             .withResourceIdentifier(resourceIdentifier);
+    }
 
+    public CreateReplicationTaskRequest createCreateReplicationTaskRequest(String jsonData) throws Exception {
+        return objectMapper.readValue(jsonData, CreateReplicationTaskRequest.class);
+    }
+
+    public Boolean createReplicationTask(CreateReplicationTaskRequest request) {
+        logger.info("createReplicationTask ......");
         CreateReplicationTaskResult response = client.createReplicationTask(request);
         replicationTaskArn = response.getReplicationTask().getReplicationTaskArn();
         replicationTaskIdentifier = response.getReplicationTask().getReplicationTaskIdentifier();
@@ -100,15 +100,21 @@ public class DmsHook {
         return awaitReplicationTaskStatus(STATUS.READY);
     }
 
-    public Boolean startReplicationTask() {
-        logger.info("startReplicationTask ......");
-        StartReplicationTaskRequest request = new StartReplicationTaskRequest()
+    public StartReplicationTaskRequest createStartReplicationTaskRequest() {
+        return new StartReplicationTaskRequest()
             .withReplicationTaskArn(replicationTaskArn)
             .withStartReplicationTaskType(startReplicationTaskType)
             .withCdcStartTime(cdcStartTime)
             .withCdcStartPosition(cdcStartPosition)
             .withCdcStopPosition(cdcStopPosition);
+    }
 
+    public StartReplicationTaskRequest createStartReplicationTaskRequest(String jsonData) throws Exception{
+        return objectMapper.readValue(jsonData, StartReplicationTaskRequest.class);
+    }
+
+    public Boolean startReplicationTask(StartReplicationTaskRequest request) {
+        logger.info("startReplicationTask ......");
         StartReplicationTaskResult response = client.startReplicationTask(request);
         return awaitReplicationTaskStatus(STATUS.RUNNING);
     }
@@ -217,7 +223,7 @@ public class DmsHook {
                 lastPercent = percent;
             }
 
-            if (exceptStatus.contains(status)) {
+            if (exceptStatus.equals(status)) {
                 logger.info("success");
                 return true;
             } else if (stopStatusSet.contains(status)) {
@@ -228,16 +234,13 @@ public class DmsHook {
         return false;
     }
 
-    protected AWSDatabaseMigrationService createClient() {
+    public static AWSDatabaseMigrationService createClient() {
         final String awsAccessKeyId = PropertyUtils.getString(TaskConstants.AWS_ACCESS_KEY_ID);
         final String awsSecretAccessKey = PropertyUtils.getString(TaskConstants.AWS_SECRET_ACCESS_KEY);
         final String awsRegion = PropertyUtils.getString(TaskConstants.AWS_REGION);
         final BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(awsAccessKeyId, awsSecretAccessKey);
         final AWSCredentialsProvider awsCredentialsProvider = new AWSStaticCredentialsProvider(basicAWSCredentials);
 
-        logger.info(awsAccessKeyId);
-        logger.info(awsSecretAccessKey);
-        logger.info(awsRegion);
         // create a DMS client
         return AWSDatabaseMigrationServiceClientBuilder.standard()
             .withCredentials(awsCredentialsProvider)
@@ -259,6 +262,10 @@ public class DmsHook {
         public static final String REPLICATION_TASK_ARN = "replication-task-arn";
         public static final String REPLICATION_INSTANCE_ARN = "replication-instance-arn";
         public static final String ENDPOINT_ARN = "endpoint-arn";
+    }
 
+    public static class START_TYPE {
+        public static final String START_REPLICATION = "start-replication";
+        public static final String RELOAD_TARGET = "reload-target";
     }
 }

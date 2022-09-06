@@ -45,6 +45,7 @@ import { userSagemaker } from './use-sagemaker'
 import { useChunjun } from './use-chunjun'
 import { usePytorch } from './use-pytorch'
 import { useHiveCli } from './use-hive-cli'
+import { useDms } from './use-dms'
 
 export default {
   SHELL: useShell,
@@ -76,5 +77,6 @@ export default {
   CHUNJUN: useChunjun,
   FLINK_STREAM: useFlinkStream,
   PYTORCH: usePytorch,
-  HIVECLI: useHiveCli
+  HIVECLI: useHiveCli,
+  DMS: useDms
 }

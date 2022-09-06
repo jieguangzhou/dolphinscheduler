@@ -49,8 +49,10 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.amazonaws.services.databasemigrationservice.AWSDatabaseMigrationService;
 import com.amazonaws.services.databasemigrationservice.AWSDatabaseMigrationServiceClientBuilder;
+import com.amazonaws.services.databasemigrationservice.model.CreateReplicationTaskRequest;
 import com.amazonaws.services.databasemigrationservice.model.DescribeReplicationTasksResult;
 import com.amazonaws.services.databasemigrationservice.model.ReplicationTask;
+import com.amazonaws.services.databasemigrationservice.model.StartReplicationTaskRequest;
 import com.amazonaws.services.databasemigrationservice.model.Tag;
 
 @RunWith(PowerMockRunner.class)
@@ -114,6 +116,58 @@ public class DmsTaskTest {
         DmsTask dmsTask = initTask(dmsParameters);
     }
 
+    @Test
+    public void testCreateStartReplicationTaskRequestFromJson() throws Exception {
+        AWSDatabaseMigrationService client = mock(AWSDatabaseMigrationService.class);
+        DmsHook dmsHook = new DmsHook(client);
+
+        String jsonData = loadJson("StartReplicationTaskRequest.json");
+        StartReplicationTaskRequest request = dmsHook.createStartReplicationTaskRequest(jsonData);
+        Assert.assertEquals("arn:aws:dms:us-east-1:123456789012:task:RALPZGYI3IUSJCBKKIRBEURKDY", request.getReplicationTaskArn());
+        Assert.assertEquals("reload-target", request.getStartReplicationTaskType());
+        Assert.assertEquals("mysql-bin-changelog.000024:373", request.getCdcStartPosition());
+//        Assert.assertEquals("2018-03-08T12:12:12", request.getCdcStartTime().toString());
+        Assert.assertEquals("server_time:2018-02-09T12:12:12", request.getCdcStopPosition());
+    }
+
+
+    @Test
+    public void testCreateCreateReplicationTaskRequest() throws Exception {
+        AWSDatabaseMigrationService client = mock(AWSDatabaseMigrationService.class);
+        DmsHook dmsHook = new DmsHook(client);
+
+//        {
+//            "ReplicationTaskIdentifier":"task1",
+//            "SourceEndpointArn":"arn:aws:dms:us-east-1:123456789012:endpoint:RZZK4EZW5UANC7Y3P4E776WHBE",
+//            "TargetEndpointArn":"arn:aws:dms:us-east-1:123456789012:endpoint:GVBUJQXJZASXWHTWCLN2WNT57E",
+//            "ReplicationInstanceArn":"arn:aws:dms:us-east-1:123456789012:rep:6USOU366XFJUWATDJGBCJS3VIQ",
+//            "MigrationType":"full-load",
+//            "TableMappings":"{\"rules\":[]}",
+//            "ReplicationTaskSettings":"{}",
+//            "CdcStartPosition":"mysql-bin-changelog.000024:373",
+//            "CdcStartTime": "2018-03-08T12:12:12",
+//            "CdcStopPosition": "server_time:2018-02-09T12:12:12",
+//            "Tags":[
+//            {
+//                "Key":"",
+//                "Value":""
+//            }
+//        }
+        String jsonData = loadJson("CreateReplicationTaskRequest.json");
+        CreateReplicationTaskRequest request = dmsHook.createCreateReplicationTaskRequest(jsonData);
+        Assert.assertEquals("task1", request.getReplicationTaskIdentifier());
+        Assert.assertEquals("arn:aws:dms:us-east-1:123456789012:endpoint:RZZK4EZW5UANC7Y3P4E776WHBE", request.getSourceEndpointArn());
+        Assert.assertEquals("arn:aws:dms:us-east-1:123456789012:endpoint:GVBUJQXJZASXWHTWCLN2WNT57E", request.getTargetEndpointArn());
+        Assert.assertEquals("arn:aws:dms:us-east-1:123456789012:rep:6USOU366XFJUWATDJGBCJS3VIQ", request.getReplicationInstanceArn());
+        Assert.assertEquals("full-load", request.getMigrationType());
+        Assert.assertEquals("{\"rules\":[]}", request.getTableMappings());
+        Assert.assertEquals("{}", request.getReplicationTaskSettings());
+        Assert.assertEquals("mysql-bin-changelog.000024:373", request.getCdcStartPosition());
+        Assert.assertEquals("2018-03-08T12:12:12", request.getCdcStartTime().toString());
+        Assert.assertEquals("server_time:2018-02-09T12:12:12", request.getCdcStopPosition());
+
+    }
+
     private DmsTask initTask(DmsParameters dmsParameters) {
         TaskExecutionContext taskExecutionContext = createContext(dmsParameters);
         DmsTask dmsTask = new DmsTask(taskExecutionContext);
@@ -126,6 +180,16 @@ public class DmsTaskTest {
         TaskExecutionContext taskExecutionContext = Mockito.mock(TaskExecutionContext.class);
         Mockito.when(taskExecutionContext.getTaskParams()).thenReturn(parameters);
         return taskExecutionContext;
+    }
+    private String loadJson(String fileName) {
+        String jsonData;
+        try (InputStream i = this.getClass().getResourceAsStream(fileName)) {
+            assert i != null;
+            jsonData = IOUtils.toString(i, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return jsonData;
     }
 
 }

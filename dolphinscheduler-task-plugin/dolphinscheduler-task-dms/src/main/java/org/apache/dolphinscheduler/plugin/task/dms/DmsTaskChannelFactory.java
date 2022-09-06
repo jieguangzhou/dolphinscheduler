@@ -6,7 +6,9 @@ import org.apache.dolphinscheduler.spi.params.base.PluginParams;
 
 import java.util.Collections;
 import java.util.List;
+import com.google.auto.service.AutoService;
 
+@AutoService(TaskChannelFactory.class)
 public class DmsTaskChannelFactory implements TaskChannelFactory {
 
     @Override
