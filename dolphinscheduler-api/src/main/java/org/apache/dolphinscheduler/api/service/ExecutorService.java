@@ -92,6 +92,18 @@ public interface ExecutorService {
      */
     Map<String, Object> execute(User loginUser, long projectCode, Integer processInstanceId, ExecuteType executeType);
 
+
+    /**
+     * do action to execute task in process instance
+     *
+     * @param loginUser login user
+     * @param projectCode project code
+     * @param processInstanceId process instance id
+     * @param executeType execute type
+     * @return execute result code
+     */
+    Map<String, Object> executeTask(User loginUser, long projectCode, Integer processInstanceId, String StartNodeList, TaskDependType taskDependType);
+
     /**
      * check if sub processes are offline before starting process definition
      *

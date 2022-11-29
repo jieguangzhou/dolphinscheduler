@@ -355,8 +355,8 @@ public class ExecutorServiceImpl extends BaseServiceImpl implements ExecutorServ
 
     /**
      * do action to process instance：pause, stop, repeat, recover from pause, recover from stop，rerun failed task
-    
-    
+
+
      *
      * @param loginUser         login user
      * @param projectCode       project code
@@ -463,6 +463,90 @@ public class ExecutorServiceImpl extends BaseServiceImpl implements ExecutorServ
                 break;
         }
         return result;
+    }
+
+    @Override
+    public Map<String, Object> executeTask(User loginUser, long projectCode, Integer processInstanceId,
+                                       String startNodeList, TaskDependType taskDependType) {
+
+        Project project = projectMapper.queryByCode(projectCode);
+        // check user access for project
+
+        Map<String, Object> result = projectService.checkProjectAndAuth(loginUser, project, projectCode,
+            ApiFuncIdentificationConstant.map.get(ExecuteType.EXECUTE_TASK));
+
+        if (result.get(Constants.STATUS) != Status.SUCCESS) {
+            return result;
+        }
+
+        // check master exists
+        if (!checkMasterExists(result)) {
+            return result;
+        }
+
+        ProcessInstance processInstance = processService.findProcessInstanceDetailById(processInstanceId)
+            .orElseThrow(() -> new ServiceException(Status.PROCESS_INSTANCE_NOT_EXIST, processInstanceId));
+
+        ProcessDefinition processDefinition =
+            processService.findProcessDefinition(processInstance.getProcessDefinitionCode(),
+                processInstance.getProcessDefinitionVersion());
+        processDefinition.setReleaseState(ReleaseState.ONLINE);
+        this.checkProcessDefinitionValid(projectCode, processDefinition, processInstance.getProcessDefinitionCode(),
+            processInstance.getProcessDefinitionVersion());
+
+        if (!checkTenantSuitable(processDefinition)) {
+            logger.error(
+                "There is not any valid tenant for the process definition, processDefinitionId:{}, processDefinitionCode:{}, ",
+                processDefinition.getId(), processDefinition.getName());
+            putMsg(result, Status.TENANT_NOT_SUITABLE);
+        }
+
+        // get the startParams user specified at the first starting while repeat running is needed
+
+        Map<String, Object> returnResult = new HashMap<>();
+
+        // To add startParams only when repeat running is needed
+        Map<String, Object> cmdParam = new HashMap<>();
+        cmdParam.put(CMD_PARAM_RECOVER_PROCESS_ID_STRING, processInstanceId);
+        // Add StartNodeList
+        cmdParam.put(CMD_PARAM_START_NODES, startNodeList);
+
+        Command command = new Command();
+        command.setCommandType(CommandType.START_TASK_PROCESS);
+        command.setProcessDefinitionCode(processDefinition.getCode());
+        command.setCommandParam(JSONUtils.toJsonString(cmdParam));
+        command.setExecutorId(loginUser.getId());
+        command.setProcessDefinitionVersion(processDefinition.getVersion());
+        command.setProcessInstanceId(processInstanceId);
+        command.setTestFlag(processInstance.getTestFlag());
+
+        // Add taskDependType
+        command.setTaskDependType(taskDependType);
+
+        if (!commandService.verifyIsNeedCreateCommand(command)) {
+            logger.warn(
+                "Process instance is executing the command, processDefinitionCode:{}, processDefinitionVersion:{}, processInstanceId:{}.",
+                processDefinition.getCode(), processDefinition.getVersion(), processInstanceId);
+            putMsg(returnResult, Status.PROCESS_INSTANCE_EXECUTING_COMMAND, String.valueOf(processDefinition.getCode()));
+            return returnResult;
+        }
+
+        logger.info("Creating command, commandInfo:{}.", command);
+        int create = commandService.createCommand(command);
+
+        if (create > 0) {
+            logger.info("Create {} command complete, processDefinitionCode:{}, processDefinitionVersion:{}.",
+                command.getCommandType().getDescp(), command.getProcessDefinitionCode(), processDefinition.getVersion());
+            putMsg(returnResult, Status.SUCCESS);
+        } else {
+            logger.error(
+                "Execute process instance failed because create {} command error, processDefinitionCode:{}, processDefinitionVersion:{}， processInstanceId:{}.",
+                command.getCommandType().getDescp(), command.getProcessDefinitionCode(), processDefinition.getVersion(),
+                processInstanceId);
+            putMsg(returnResult, Status.EXECUTE_PROCESS_INSTANCE_ERROR);
+        }
+
+        return returnResult;
     }
 
     @Override

@@ -878,6 +878,11 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
                     LoggerUtils.removeWorkflowAndTaskInstanceIdMDC();
                 }
             }
+            if (processInstance.getCommandType().equals(CommandType.START_TASK_PROCESS)) {
+                taskInstanceMap.entrySet().removeIf(map -> dag.containsNode(Long.toString(map.getValue().getTaskCode())));
+                completeTaskMap.entrySet().removeIf(map -> dag.containsNode(Long.toString(map.getKey())));
+                validTaskMap.entrySet().removeIf(map -> dag.containsNode(Long.toString(map.getKey())));
+            }
         } else {
             logger.info("The current workflowInstance is a newly running workflowInstance");
         }

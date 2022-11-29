@@ -907,6 +907,11 @@ public class ProcessServiceImpl implements ProcessService {
                     cmdParam.remove(CommandKeyConstants.CMD_PARAM_RECOVERY_START_NODE_STRING);
                     processInstance.setCommandParam(JSONUtils.toJsonString(cmdParam));
                 }
+                if (cmdParam.containsKey(CommandKeyConstants.CMD_PARAM_START_NODES)) {
+                    cmdParam.remove(CommandKeyConstants.CMD_PARAM_START_NODES);
+                    processInstance.setCommandParam(JSONUtils.toJsonString(cmdParam));
+                    processInstance.setTaskDependType(command.getTaskDependType());
+                }
                 // delete all the valid tasks when repeat running
                 List<TaskInstance> validTaskList =
                         taskInstanceDao.findValidTaskListByProcessId(processInstance.getId(),
@@ -922,6 +927,18 @@ public class ProcessServiceImpl implements ProcessService {
                 initComplementDataParam(processDefinition, processInstance, cmdParam);
                 break;
             case SCHEDULER:
+                break;
+            case START_TASK_PROCESS:
+                String startNodeList = cmdParam.get(CommandKeyConstants.CMD_PARAM_START_NODES);
+                TaskInstance taskInstance = taskInstanceMapper.queryByInstanceIdAndCode(processInstance.getId(),
+                    Long.parseLong(startNodeList));
+                if (taskInstance != null) {
+                    taskInstance.setFlag(Flag.NO);
+                    taskInstanceDao.updateTaskInstance(taskInstance);
+                }
+                processInstance.setRunTimes(runTime + 1);
+                processInstance.setTaskDependType(command.getTaskDependType());
+                processInstance.setCommandParam(JSONUtils.toJsonString(cmdParam));
                 break;
             default:
                 break;
