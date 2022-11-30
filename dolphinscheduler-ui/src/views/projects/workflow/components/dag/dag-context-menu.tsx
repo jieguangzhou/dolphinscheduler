@@ -24,6 +24,7 @@ import styles from './menu.module.scss'
 import { uuid } from '@/common/common'
 import { IWorkflowTaskInstance } from './types'
 import { NButton } from 'naive-ui'
+import type { ProcessInstanceReq } from '@/service/modules/executors/types'
 
 const props = {
   startDisplay: {
@@ -59,7 +60,7 @@ const props = {
 export default defineComponent({
   name: 'dag-context-menu',
   props,
-  emits: ['hide', 'start', 'edit', 'viewLog', 'copyTask', 'removeTasks'],
+  emits: ['hide', 'start', 'edit', 'viewLog', 'copyTask', 'removeTasks', 'executeTask'],
   setup(props, ctx) {
     const graph = inject('graph', ref())
     const route = useRoute()
@@ -80,6 +81,22 @@ export default defineComponent({
     const handleViewLog = () => {
       if (props.taskInstance) {
         ctx.emit('viewLog', props.taskInstance.id, props.taskInstance.taskType)
+      }
+    }
+
+    const handleExecuteTaskOnly = () => {
+      ctx.emit('executeTask', Number(props.cell?.id), 'TASK_ONLY')
+    }
+
+    const handleExecuteTaskPOST = () => {
+      if (props.taskInstance) {
+        ctx.emit('executeTask', Number(props.cell?.id), 'TASK_POST')
+      }
+    }
+
+    const handleExecuteTaskPRE = () => {
+      if (props.taskInstance) {
+        ctx.emit('executeTask', Number(props.cell?.id), 'TASK_PRE')
       }
     }
 
@@ -115,7 +132,10 @@ export default defineComponent({
       handleEdit,
       handleCopy,
       handleDelete,
-      handleViewLog
+      handleViewLog,
+      handleExecuteTaskOnly,
+      handleExecuteTaskPOST,
+      handleExecuteTaskPRE
     }
   },
   render() {
@@ -158,12 +178,34 @@ export default defineComponent({
             </>
           )}
           {this.taskInstance && (
-            <NButton
-              class={`${styles['menu-item']}`}
-              onClick={this.handleViewLog}
-            >
-              {t('project.node.view_log')}
-            </NButton>
+              <NButton
+                  class={`${styles['menu-item']}`}
+                  onClick={this.handleViewLog}
+              >
+                {t('project.node.view_log')}
+              </NButton>
+          )}
+          {!this.startDisplay && (
+              <>
+                <NButton
+                    class={`${styles['menu-item']}`}
+                    onClick={this.handleExecuteTaskOnly}
+                >
+                  {t('project.workflow.current_node_execution_task')}
+                </NButton>
+                <NButton
+                    class={`${styles['menu-item']}`}
+                    onClick={this.handleExecuteTaskPOST}
+                >
+                  {t('project.workflow.backward_execution_task')}
+                </NButton>
+                <NButton
+                    class={`${styles['menu-item']}`}
+                    onClick={this.handleExecuteTaskPRE}
+                >
+                  {t('project.workflow.forward_execution_task')}
+                </NButton>
+              </>
           )}
         </div>
       )

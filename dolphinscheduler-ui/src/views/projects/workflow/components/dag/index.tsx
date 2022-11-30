@@ -55,6 +55,7 @@ import { queryLog } from '@/service/modules/log'
 import { useAsyncState } from '@vueuse/core'
 import utils from '@/utils'
 import { useUISettingStore } from '@/store/ui-setting/ui-setting'
+import { executeTask } from '@/service/modules/executors'
 
 const props = {
   // If this prop is passed, it means from definition detail
@@ -283,6 +284,19 @@ export default defineComponent({
       getLogs(logTimer)
     }
 
+    const handleExecuteTask = (startNodeList: number, taskDependType: string) => {
+      executeTask({
+        processInstanceId: Number(route.params.id),
+        startNodeList: startNodeList,
+        taskDependType: taskDependType,
+      },
+        props.projectCode).then((res: any) => {
+        window.$message.success(t('project.workflow.success'))
+        }
+      )
+      setTimeout(() => { refreshTaskStatus(); }, 1000);
+    }
+
     const downloadLogs = () => {
       utils.downloadFile('log/download-log', {
         taskInstanceId: nodeVariables.logTaskId
@@ -394,6 +408,7 @@ export default defineComponent({
           onCopyTask={copyTask}
           onRemoveTasks={removeTasks}
           onViewLog={handleViewLog}
+          onExecuteTask={handleExecuteTask}
         />
         {!!props.definition && (
           <StartModal
@@ -418,3 +433,7 @@ export default defineComponent({
     )
   }
 })
+function String(code: any): number {
+  throw new Error('Function not implemented.')
+}
+
