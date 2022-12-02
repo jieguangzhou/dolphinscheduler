@@ -72,7 +72,7 @@ public class TaskFilesTransferUtils {
                                          StorageOperate storageOperate) throws TaskException {
         List<Property> varPools = getVarPools(taskExecutionContext);
         // get map of varPools for quick search
-        Map<String, Property> varPoolsMap = varPools.stream().collect(Collectors.toMap(Property::getProp, x -> x));
+        Map<String, Property> varPoolsMap = varPools.stream().filter(varPool -> varPool.getDirect() == Direct.OUT).collect(Collectors.toMap(Property::getProp, x -> x));
 
         // get OUTPUT FILE parameters
         List<Property> localParamsProperty = getFileLocalParams(taskExecutionContext, Direct.OUT);
@@ -124,7 +124,7 @@ public class TaskFilesTransferUtils {
     public static void downloadUpstreamFiles(TaskExecutionContext taskExecutionContext, StorageOperate storageOperate) {
         List<Property> varPools = getVarPools(taskExecutionContext);
         // get map of varPools for quick search
-        Map<String, Property> varPoolsMap = varPools.stream().collect(Collectors.toMap(Property::getProp, x -> x));
+        Map<String, Property> varPoolsMap = varPools.stream().filter(varPool -> varPool.getDirect() == Direct.IN).collect(Collectors.toMap(Property::getProp, x -> x));
 
         // get "IN FILE" parameters
         List<Property> localParamsProperty = getFileLocalParams(taskExecutionContext, Direct.IN);

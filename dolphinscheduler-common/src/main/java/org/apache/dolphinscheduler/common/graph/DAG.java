@@ -498,6 +498,10 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
         return new AbstractMap.SimpleEntry<>(notZeroIndegreeNodeMap.size() == 0, topoResultList);
     }
 
+    public Set<Node> getAllNodesList() {
+        return nodesMap.keySet();
+    }
+
     @Override
     public String toString() {
         return "DAG{"

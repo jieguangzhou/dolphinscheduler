@@ -929,13 +929,13 @@ public class ProcessServiceImpl implements ProcessService {
             case SCHEDULER:
                 break;
             case START_TASK_PROCESS:
-                String startNodeList = cmdParam.get(CommandKeyConstants.CMD_PARAM_START_NODES);
-                TaskInstance taskInstance = taskInstanceMapper.queryByInstanceIdAndCode(processInstance.getId(),
-                    Long.parseLong(startNodeList));
-                if (taskInstance != null) {
-                    taskInstance.setFlag(Flag.NO);
-                    taskInstanceDao.updateTaskInstance(taskInstance);
-                }
+//                String startNodeList = cmdParam.get(CommandKeyConstants.CMD_PARAM_START_NODES);
+//                TaskInstance taskInstance = taskInstanceDao.findTaskByInstanceIdAndCode(processInstance.getId(),
+//                    Long.parseLong(startNodeList));
+//                if (taskInstance != null) {
+//                    taskInstance.setFlag(Flag.NO);
+//                    taskInstanceDao.updateTaskInstance(taskInstance);
+//                }
                 processInstance.setRunTimes(runTime + 1);
                 processInstance.setTaskDependType(command.getTaskDependType());
                 processInstance.setCommandParam(JSONUtils.toJsonString(cmdParam));
