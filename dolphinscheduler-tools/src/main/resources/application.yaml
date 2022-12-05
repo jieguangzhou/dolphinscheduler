@@ -18,10 +18,10 @@ spring:
   main:
     banner-mode: off
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://127.0.0.1:5432/dolphinscheduler
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.2.90:3307/dolphinscheduler?useUnicode=true&characterEncoding=UTF-8
     username: root
-    password: root
+    password: 123456
     hikari:
       connection-test-query: select 1
       minimum-idle: 5

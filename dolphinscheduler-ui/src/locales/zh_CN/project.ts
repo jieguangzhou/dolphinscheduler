@@ -163,6 +163,7 @@ export default {
     pause: '暂停',
     recovery_waiting_thread: '恢复等待线程',
     recover_serial_wait: '串行恢复',
+    execute_task: '执行指定任务',
     recovery_suspend: '恢复运行',
     recovery_failed: '重跑失败任务',
     gantt: '甘特图',

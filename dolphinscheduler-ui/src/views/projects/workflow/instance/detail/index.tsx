@@ -101,7 +101,7 @@ export default defineComponent({
         projectCode
       ).then((ignored: any) => {
         window.$message.success(t('project.dag.success'))
-        router.push({ path: `/projects/${projectCode}/workflow/instances` })
+        window.location.reload()
       })
     }
 

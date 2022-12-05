@@ -24,10 +24,13 @@ import styles from './menu.module.scss'
 import { uuid } from '@/common/common'
 import { IWorkflowTaskInstance } from './types'
 import { NButton } from 'naive-ui'
-import type { ProcessInstanceReq } from '@/service/modules/executors/types'
 
 const props = {
   startDisplay: {
+    type: Boolean as PropType<boolean>,
+    default: false
+  },
+  executeTaskDisplay: {
     type: Boolean as PropType<boolean>,
     default: false
   },
@@ -185,7 +188,7 @@ export default defineComponent({
                 {t('project.node.view_log')}
               </NButton>
           )}
-          {!this.startDisplay && (
+          {this.executeTaskDisplay && (
               <>
                 <NButton
                     class={`${styles['menu-item']}`}

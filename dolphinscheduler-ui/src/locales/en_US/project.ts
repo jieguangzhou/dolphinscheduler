@@ -160,6 +160,7 @@ export default {
     pause: 'Pause',
     recovery_waiting_thread: 'Recovery waiting thread',
     recover_serial_wait: 'Recover serial wait',
+    execute_task: 'Execute the specified task',
     recovery_suspend: 'Recovery Suspend',
     recovery_failed: 'Recovery Failed',
     gantt: 'Gantt',

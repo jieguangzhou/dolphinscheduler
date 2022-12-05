@@ -61,6 +61,7 @@ import org.apache.dolphinscheduler.dao.entity.ProcessTaskRelation;
 import org.apache.dolphinscheduler.dao.entity.Project;
 import org.apache.dolphinscheduler.dao.entity.Schedule;
 import org.apache.dolphinscheduler.dao.entity.TaskDefinition;
+import org.apache.dolphinscheduler.dao.entity.TaskDefinitionLog;
 import org.apache.dolphinscheduler.dao.entity.TaskGroupQueue;
 import org.apache.dolphinscheduler.dao.entity.Tenant;
 import org.apache.dolphinscheduler.dao.entity.User;
@@ -68,9 +69,11 @@ import org.apache.dolphinscheduler.dao.mapper.ProcessDefinitionMapper;
 import org.apache.dolphinscheduler.dao.mapper.ProcessInstanceMapper;
 import org.apache.dolphinscheduler.dao.mapper.ProcessTaskRelationMapper;
 import org.apache.dolphinscheduler.dao.mapper.ProjectMapper;
+import org.apache.dolphinscheduler.dao.mapper.TaskDefinitionLogMapper;
 import org.apache.dolphinscheduler.dao.mapper.TaskDefinitionMapper;
 import org.apache.dolphinscheduler.dao.mapper.TaskGroupQueueMapper;
 import org.apache.dolphinscheduler.dao.repository.ProcessInstanceDao;
+import org.apache.dolphinscheduler.dao.repository.TaskInstanceDao;
 import org.apache.dolphinscheduler.plugin.task.api.TaskConstants;
 import org.apache.dolphinscheduler.remote.command.TaskExecuteStartCommand;
 import org.apache.dolphinscheduler.remote.command.WorkflowExecutingDataRequestCommand;
@@ -138,6 +141,9 @@ public class ExecutorServiceImpl extends BaseServiceImpl implements ExecutorServ
 
     @Autowired
     private ProcessInstanceDao processInstanceDao;
+
+    @Autowired
+    private TaskDefinitionLogMapper taskDefinitionLogMapper;
 
     @Autowired
     private StateEventCallbackService stateEventCallbackService;
@@ -503,6 +509,12 @@ public class ExecutorServiceImpl extends BaseServiceImpl implements ExecutorServ
 
         // get the startParams user specified at the first starting while repeat running is needed
 
+        if (taskDefinitionLogMapper.queryMaxVersionForDefinition(Long.parseLong(startNodeList)) == null) {
+            putMsg(result, Status.EXECUTE_NOT_DEFINE_TASK);
+            return result;
+        }
+
+
         Map<String, Object> returnResult = new HashMap<>();
 
         // To add startParams only when repeat running is needed
@@ -512,7 +524,7 @@ public class ExecutorServiceImpl extends BaseServiceImpl implements ExecutorServ
         cmdParam.put(CMD_PARAM_START_NODES, startNodeList);
 
         Command command = new Command();
-        command.setCommandType(CommandType.START_TASK_PROCESS);
+        command.setCommandType(CommandType.EXECUTE_TASK);
         command.setProcessDefinitionCode(processDefinition.getCode());
         command.setCommandParam(JSONUtils.toJsonString(cmdParam));
         command.setExecutorId(loginUser.getId());

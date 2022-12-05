@@ -60,6 +60,7 @@ import org.apache.dolphinscheduler.dao.entity.TaskInstance;
 import org.apache.dolphinscheduler.dao.repository.ProcessInstanceDao;
 import org.apache.dolphinscheduler.dao.repository.TaskDefinitionLogDao;
 import org.apache.dolphinscheduler.dao.repository.TaskInstanceDao;
+import org.apache.dolphinscheduler.plugin.task.api.enums.DataType;
 import org.apache.dolphinscheduler.plugin.task.api.enums.DependResult;
 import org.apache.dolphinscheduler.plugin.task.api.enums.Direct;
 import org.apache.dolphinscheduler.plugin.task.api.enums.TaskExecutionStatus;
@@ -848,7 +849,7 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
                     LoggerUtils.removeWorkflowAndTaskInstanceIdMDC();
                 }
             }
-            clearDataIfExecuteTaskOnly();
+            clearDataIfExecuteTask();
         } else {
             logger.info("The current workflowInstance is a newly running workflowInstance");
         }
@@ -2013,8 +2014,12 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         }
     }
 
-    private void clearDataIfExecuteTaskOnly() {
-        if (!processInstance.getCommandType().equals(CommandType.START_TASK_PROCESS)) {
+    private void clearDataIfExecuteTask() {
+        if (!processInstance.getCommandType().equals(CommandType.EXECUTE_TASK)) {
+            return;
+        }
+
+        if (dag == null) {
             return;
         }
 
@@ -2046,7 +2051,6 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
                     if (property.getDirect().equals(Direct.OUT)) {
                         String key = String.format("%s_%s", property.getProp(), property.getType());
                         removeSet.add(key);
-
                     }
                 }
             }

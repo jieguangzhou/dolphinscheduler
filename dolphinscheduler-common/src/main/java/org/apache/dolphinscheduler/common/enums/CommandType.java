@@ -55,7 +55,7 @@ public enum CommandType {
     STOP(9, "stop a process"),
     RECOVER_WAITING_THREAD(10, "recover waiting thread"),
     RECOVER_SERIAL_WAIT(11, "recover serial wait"),
-    START_TASK_PROCESS(12, "start a task node in a process instance"),
+    EXECUTE_TASK(12, "start a task node in a process instance"),
     ;
 
     CommandType(int code, String descp) {

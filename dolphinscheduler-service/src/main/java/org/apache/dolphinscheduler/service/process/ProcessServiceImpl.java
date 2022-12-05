@@ -928,14 +928,7 @@ public class ProcessServiceImpl implements ProcessService {
                 break;
             case SCHEDULER:
                 break;
-            case START_TASK_PROCESS:
-//                String startNodeList = cmdParam.get(CommandKeyConstants.CMD_PARAM_START_NODES);
-//                TaskInstance taskInstance = taskInstanceDao.findTaskByInstanceIdAndCode(processInstance.getId(),
-//                    Long.parseLong(startNodeList));
-//                if (taskInstance != null) {
-//                    taskInstance.setFlag(Flag.NO);
-//                    taskInstanceDao.updateTaskInstance(taskInstance);
-//                }
+            case EXECUTE_TASK:
                 processInstance.setRunTimes(runTime + 1);
                 processInstance.setTaskDependType(command.getTaskDependType());
                 processInstance.setCommandParam(JSONUtils.toJsonString(cmdParam));
@@ -2070,8 +2063,13 @@ public class ProcessServiceImpl implements ProcessService {
         // and update the origin one if exist
         int updateResult = 0;
         int insertResult = 0;
-        if (CollectionUtils.isNotEmpty(newTaskDefinitionLogs)) {
-            insertResult += taskDefinitionLogMapper.batchInsert(newTaskDefinitionLogs);
+
+        // only insert new task definitions if they not in updateTaskDefinitionLogs
+        List<TaskDefinitionLog> newInsertTaskDefinitionLogs = newTaskDefinitionLogs.stream()
+            .filter(taskDefinitionLog -> !updateTaskDefinitionLogs.contains(taskDefinitionLog))
+            .collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(newInsertTaskDefinitionLogs)) {
+            insertResult = taskDefinitionLogMapper.batchInsert(newInsertTaskDefinitionLogs);
         }
         if (CollectionUtils.isNotEmpty(updateTaskDefinitionLogs)) {
             insertResult += taskDefinitionLogMapper.batchInsert(updateTaskDefinitionLogs);

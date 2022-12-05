@@ -33,7 +33,7 @@ public class InitDolphinScheduler {
     }
 
     @Component
-    @Profile("init")
+    @Profile("default")
     static class InitRunner implements CommandLineRunner {
 
         private static final Logger logger = LoggerFactory.getLogger(InitRunner.class);

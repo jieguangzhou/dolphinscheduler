@@ -136,6 +136,13 @@ export default defineComponent({
       }
     })
 
+    // execute task buttons in the dag node menu
+    const executeTaskDisplay = computed(() => {
+        return (
+            route.name === 'workflow-instance-detail'
+        )
+    })
+
     // other button in the dag node menu
     const menuDisplay = computed(() => {
       if (props.instance) {
@@ -291,10 +298,11 @@ export default defineComponent({
         taskDependType: taskDependType,
       },
         props.projectCode).then((res: any) => {
-        window.$message.success(t('project.workflow.success'))
-        }
-      )
-      setTimeout(() => { refreshTaskStatus(); }, 1000);
+          window.$message.success(t('project.workflow.success'))
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        })
     }
 
     const downloadLogs = () => {
@@ -396,6 +404,7 @@ export default defineComponent({
         />
         <ContextMenuItem
           startDisplay={startDisplay.value}
+          executeTaskDisplay={executeTaskDisplay.value}
           menuDisplay={menuDisplay.value}
           taskInstance={taskInstance.value}
           cell={nodeVariables.menuCell as Cell}
