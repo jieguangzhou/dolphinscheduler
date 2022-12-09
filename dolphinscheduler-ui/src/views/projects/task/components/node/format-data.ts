@@ -476,6 +476,7 @@ export function formatParams(data: INodeData): {
         : '0',
       failRetryTimes: data.failRetryTimes ? String(data.failRetryTimes) : '0',
       flag: data.flag,
+      isCache: data.isCache ? "YES" : "NO",
       name: data.name,
       taskGroupId: data.taskGroupId,
       taskGroupPriority: data.taskGroupPriority,
@@ -524,6 +525,7 @@ export function formatModel(data: ITaskData) {
     ...omit(data.taskParams, ['resourceList', 'mainJar', 'localParams']),
     environmentCode: data.environmentCode === -1 ? null : data.environmentCode,
     timeoutFlag: data.timeoutFlag === 'OPEN',
+    isCache: data.isCache === 'YES',
     timeoutNotifyStrategy: data.timeoutNotifyStrategy
       ? [data.timeoutNotifyStrategy]
       : [],

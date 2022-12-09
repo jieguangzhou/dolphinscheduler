@@ -17,6 +17,7 @@
 
 package org.apache.dolphinscheduler.api.service;
 
+import org.apache.dolphinscheduler.api.dto.taskInstance.TaskInstanceRemoveCacheResponse;
 import org.apache.dolphinscheduler.api.utils.Result;
 import org.apache.dolphinscheduler.common.enums.TaskExecuteType;
 import org.apache.dolphinscheduler.dao.entity.User;
@@ -89,4 +90,13 @@ public interface TaskInstanceService {
      * @return
      */
     Result stopTask(User loginUser, long projectCode, Integer taskInstanceId);
+
+    /**
+     * remove task instance cache
+     * @param loginUser
+     * @param projectCode
+     * @param taskInstanceId
+     * @return
+     */
+    TaskInstanceRemoveCacheResponse removeTaskInstanceCache(User loginUser, long projectCode, Integer taskInstanceId);
 }

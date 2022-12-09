@@ -18,11 +18,14 @@
 package org.apache.dolphinscheduler.server.master.consumer;
 
 import org.apache.dolphinscheduler.common.constants.Constants;
+import org.apache.dolphinscheduler.common.enums.IsCache;
 import org.apache.dolphinscheduler.common.lifecycle.ServerLifeCycleManager;
 import org.apache.dolphinscheduler.common.thread.BaseDaemonThread;
 import org.apache.dolphinscheduler.common.thread.ThreadUtils;
 import org.apache.dolphinscheduler.dao.entity.TaskInstance;
 import org.apache.dolphinscheduler.dao.repository.TaskInstanceDao;
+import org.apache.dolphinscheduler.dao.utils.TaskCacheUtils;
+import org.apache.dolphinscheduler.plugin.task.api.TaskException;
 import org.apache.dolphinscheduler.plugin.task.api.TaskExecutionContext;
 import org.apache.dolphinscheduler.remote.command.Command;
 import org.apache.dolphinscheduler.remote.command.TaskDispatchCommand;
@@ -217,6 +220,15 @@ public class TaskPriorityQueueConsumer extends BaseDaemonThread {
                 }
             }
 
+            // check task is cache execution
+            try {
+                if (checkIsCacheExecution(taskInstance, context)){
+                    return true;
+                }
+            }catch (Exception e){
+                logger.error("checkIsCacheExecution error",e);
+            }
+
             result = dispatcher.dispatch(executionContext);
 
             if (result) {
@@ -243,6 +255,7 @@ public class TaskPriorityQueueConsumer extends BaseDaemonThread {
                 executionContext.getHost().getAddress());
         taskEventService.addEvent(taskEvent);
     }
+
 
     private Command toCommand(TaskExecutionContext taskExecutionContext) {
         // todo: we didn't set the host here, since right now we didn't need to retry this message.
@@ -275,5 +288,30 @@ public class TaskPriorityQueueConsumer extends BaseDaemonThread {
             return true;
         }
         return false;
+    }
+
+    private boolean checkIsCacheExecution(TaskInstance taskInstance, TaskExecutionContext context) {
+        if (taskInstance.getIsCache().equals(IsCache.YES)){
+            String cacheKey = TaskCacheUtils.generateCacheKey(taskInstance, context);
+            TaskInstance cacheTaskInstance = taskInstanceDao.findTaskInstanceByCacheKey(cacheKey);
+            if (cacheTaskInstance != null) {
+                logger.info("Task {} is cache, no need to dispatch, task instance id: {}",
+                    taskInstance.getName(), taskInstance.getId());
+                addCacheEvent(taskInstance, cacheTaskInstance);
+                taskInstance.setTmpCacheKey(TaskCacheUtils.generateTagCacheKey(cacheTaskInstance.getId(), cacheKey));
+                return true;
+            }else {
+                taskInstance.setTmpCacheKey(cacheKey);
+            }
+        }
+        return false;
+    }
+
+    private void addCacheEvent(TaskInstance taskInstance, TaskInstance cacheTaskInstance) {
+        if (cacheTaskInstance == null) {
+            return;
+        }
+        TaskEvent taskEvent = TaskEvent.newCacheEvent(taskInstance.getProcessInstanceId(), taskInstance.getId(), cacheTaskInstance.getId());
+        taskEventService.addEvent(taskEvent);
     }
 }

@@ -121,8 +121,8 @@ public class ProcessInstance {
     private ProcessDefinition processDefinition;
     /**
      * process command type
-     */
-    private CommandType commandType;
+     */    private CommandType commandType;
+
 
     /**
      * command parameters
